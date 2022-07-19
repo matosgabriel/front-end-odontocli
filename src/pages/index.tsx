@@ -1,6 +1,5 @@
 import { Flex } from '@chakra-ui/react';
-import Link from 'next/link';
-import { Image, LinkBox } from '@chakra-ui/react';
+import { Image } from '@chakra-ui/react';
 
 export default function Home() {
   return (
@@ -18,7 +17,14 @@ export default function Home() {
         <Image src='/logo.svg' alt='Logo' draggable='false' />
       </Flex>
 
-      
+      <Flex
+        as='main'
+        flex='1'
+        flexDir='column'
+        position='relative'
+        _before={{ content: `''`, height: '1px', bg:'#E4E6EF', width: '100%', position: 'absolute', left: 0, top: 0 }}
+      >
+      </Flex>
     </Flex>
   )
 }
