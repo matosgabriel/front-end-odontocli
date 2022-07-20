@@ -30,8 +30,8 @@ export default function Home() {
         width='100%'
         padding={{ lg: '45px 123px 0', sm: '20px 30px 0', base: '10px 15px 0' }}
       >
-        <Flex flex='1' bg='#333'>teste</Flex>
+        <Flex flex='1' ><h1>TESTE</h1></Flex>
       </Flex>
     </Flex>
-  )
+  );
 }

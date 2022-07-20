@@ -7,5 +7,9 @@ export const theme = extendTheme({
         bg: '#fff'
       }
     }
+  },
+  fonts: {
+    heading: 'Poppins',
+    body: 'Poppins'
   }
 });
