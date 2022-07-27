@@ -1,4 +1,5 @@
-import { Button, Flex, Image, Text, VStack } from '@chakra-ui/react';
+import { Flex, Image, Text, VStack } from '@chakra-ui/react';
+import { PageButton } from '../components/PageButton';
 
 export default function Home() {
   return (
@@ -34,28 +35,11 @@ export default function Home() {
             <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>INÍCIO</Text>
             
             <VStack spacing='20px' w='100%'>
-              <Button
-                w='100%'
-                borderLeftWidth={'4px'}
-                borderColor='#0094FF'
-                justifyContent='flex-start'
-                fontSize='14px'
-                lineHeight='21px'
-              >
-                Pacientes
-              </Button>
-
-              <Button
-                w='100%'
-                justifyContent='flex-start'
-                fontSize='14px'
-                lineHeight='21px'
-                bg='transparent'
-              >
-                Pacientes
-              </Button>
+              <PageButton title='Pacientes' isActive />
+              <PageButton title='Teste' />
             </VStack>
           </VStack>
+
         </VStack>
       </Flex>
     </Flex>
