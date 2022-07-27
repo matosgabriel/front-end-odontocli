@@ -1,8 +1,14 @@
 import { Flex, Image, Text, VStack } from '@chakra-ui/react';
+import Head from 'next/head';
 import { PageButton } from '../components/PageButton';
 
 export default function Home() {
   return (
+    <>
+    <Head>
+      <title>Odontocli | Home</title>
+    </Head>
+    
     <Flex width='100vw' height='100vh' flexDir='column'>
       <Flex
         w='100%'
@@ -30,7 +36,7 @@ export default function Home() {
         w='100%'
         padding={{ lg: '45px 123px 0', sm: '20px 30px 0', base: '10px 15px 0' }}
       >
-        <VStack as='aside' w='242px' h='100%' spacing='35px'> {/* Aside */}
+        <VStack as='aside' w='242px' h='100%' spacing='35px' borderRightWidth='1px'> {/* Aside */}
           <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Seção */}
             <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>INÍCIO</Text>
             
@@ -68,5 +74,6 @@ export default function Home() {
         </VStack>
       </Flex>
     </Flex>
+    </>
   );
 }

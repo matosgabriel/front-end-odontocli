@@ -1,14 +1,14 @@
-import { Button as ChakraButton} from '@chakra-ui/react';
+import { Button as ChakraButton, ButtonProps as ChakraButtonProps} from '@chakra-ui/react';
 
-interface PageButtonProps {
+interface PageButtonProps extends ChakraButtonProps {
   title: string;
   isActive?: boolean;
 }
 
-function PageButton({ title, isActive = false }: PageButtonProps) {
+function PageButton({ title, isActive = false, ...rest }: PageButtonProps) {
   return (
     <ChakraButton
-      w='100%'
+      w='90%'
       borderLeftWidth={isActive ? '4px' : '0px'}
       borderColor='#0094FF'
       justifyContent='flex-start'
@@ -16,6 +16,8 @@ function PageButton({ title, isActive = false }: PageButtonProps) {
       lineHeight='21px'
       fontWeight={isActive ? '600' : '500'}
       variant={isActive ? 'solid' : 'ghost'}
+      alignSelf='flex-start'
+      {...rest}
     >
       { title }
     </ChakraButton>
