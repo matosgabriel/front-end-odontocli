@@ -1,5 +1,4 @@
-import { Flex } from '@chakra-ui/react';
-import { Image } from '@chakra-ui/react';
+import { Button, Flex, Image, Text, VStack } from '@chakra-ui/react';
 
 export default function Home() {
   return (
@@ -26,11 +25,38 @@ export default function Home() {
       <Flex
         as='main'
         flexDir='column'
-        height='100%'
-        width='100%'
+        h='100%'
+        w='100%'
         padding={{ lg: '45px 123px 0', sm: '20px 30px 0', base: '10px 15px 0' }}
       >
-        <Flex flex='1' ><h1>TESTE</h1></Flex>
+        <VStack as='aside' w='242px' h='100%' spacing='35px'> {/* Aside */}
+          <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Seção */}
+            <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>INÍCIO</Text>
+            
+            <VStack spacing='20px' w='100%'>
+              <Button
+                w='100%'
+                borderLeftWidth={'4px'}
+                borderColor='#0094FF'
+                justifyContent='flex-start'
+                fontSize='14px'
+                lineHeight='21px'
+              >
+                Pacientes
+              </Button>
+
+              <Button
+                w='100%'
+                justifyContent='flex-start'
+                fontSize='14px'
+                lineHeight='21px'
+                bg='transparent'
+              >
+                Pacientes
+              </Button>
+            </VStack>
+          </VStack>
+        </VStack>
       </Flex>
     </Flex>
   );
