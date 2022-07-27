@@ -36,10 +36,35 @@ export default function Home() {
             
             <VStack spacing='20px' w='100%'>
               <PageButton title='Pacientes' isActive />
-              <PageButton title='Teste' />
             </VStack>
           </VStack>
 
+          <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Seção */}
+            <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>ATENDIMENTO</Text>
+            
+            <VStack spacing='20px' w='100%'>
+              <PageButton title='Consultas' />
+              <PageButton title='Tratamentos' />
+            </VStack>
+          </VStack>
+          
+          <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Seção */}
+            <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>FINANCEIRO</Text>
+            
+            <VStack spacing='20px' w='100%'>
+              <PageButton title='Débitos recebidos' />
+              <PageButton title='Dívidas' />
+              <PageButton title='Balanço' />
+            </VStack>
+          </VStack>
+
+          <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Seção */}
+            <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>ASPECTOS LEGAIS</Text>
+            
+            <VStack spacing='20px' w='100%'>
+              <PageButton title='Termos de uso' />
+            </VStack>
+          </VStack>
         </VStack>
       </Flex>
     </Flex>
