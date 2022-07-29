@@ -1,6 +1,13 @@
 import { extendTheme } from '@chakra-ui/react';
 
 export const theme = extendTheme({
+  colors: {
+    pageButtonBlue: {
+      500: "#0094FF", // Background color
+      600: '#0081de', // Hover color
+      700: '#0068b3' // Pressed color
+    }
+  },
   styles: {
     global: {
       body: {

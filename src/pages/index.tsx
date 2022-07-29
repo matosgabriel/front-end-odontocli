@@ -1,4 +1,4 @@
-import { Flex, Image, Text, useBreakpoint, VStack } from '@chakra-ui/react';
+import { Button, Flex, Image, Text, useBreakpoint, VStack } from '@chakra-ui/react';
 import Head from 'next/head';
 import { useEffect } from 'react';
 import { PageButton } from '../components/PageButton';
@@ -48,9 +48,8 @@ export default function Home() {
         padding={{ '2xl': '45px 123px 0', xl: '30px 70px 0', lg: '20px 50px 0', sm: '15px 30px 0' }}
         align='flex-start'
       >
-        {/* <VStack as='aside' w='242px' h='100%' spacing='35px' borderRightWidth='1px'> Aside */}
         <VStack as='aside' w='242px' h='100%' spacing={{base: '20px', xl: '25px', '2xl': '35px'}} borderRightWidth='1px'> {/* Aside */}
-          <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Seção */}
+          <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Section */}
             <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>INÍCIO</Text>
             
             <VStack spacing={{ xl: '10px', '2xl': '20px' }} w='100%'>
@@ -58,7 +57,7 @@ export default function Home() {
             </VStack>
           </VStack>
 
-          <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Seção */}
+          <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Section */}
             <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>ATENDIMENTO</Text>
             
             <VStack spacing={{ base: '8px', xl: '10px', '2xl': '12px' }} w='100%'>
@@ -67,7 +66,7 @@ export default function Home() {
             </VStack>
           </VStack>
           
-          <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Seção */}
+          <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Section */}
             <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>FINANCEIRO</Text>
             
             <VStack spacing={{ xl: '10px', '2xl': '12px' }} w='100%'>
@@ -77,7 +76,7 @@ export default function Home() {
             </VStack>
           </VStack>
 
-          <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Seção */}
+          <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Section */}
             <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>ASPECTOS LEGAIS</Text>
             
             <VStack spacing={{ xl: '10px', '2xl': '12px' }} w='100%'>
@@ -85,14 +84,43 @@ export default function Home() {
             </VStack>
           </VStack>
         </VStack>
-        
-        <Flex>
-          <Image
-            src={getAvatarUrl('Gabriel Matos')}
-            // borderRadius='50%'
-            alt='Avatar'
-            height='50px'
-          />
+
+        <Flex w='100%' h='100%' pl={{ base: '30px', md: '40px', xl: '60px', '2xl': '97px' }} flexDir='column'> {/* Content */}
+          <Flex // Content header
+            flexDir='row'
+            align='center'
+            justify='space-between'
+            w='100%'
+            h='42px'
+          > 
+            <Flex display='flex' align='baseline'>
+              <Text
+                fontSize={{ base: '16px', xl: '18px', '2xl': '22px' }}
+                lineHeight={{ base: '20px', xl: '24px', '2xl': '33px' }}
+                fontWeight='600'
+              >
+                Pacientes
+              </Text>
+              <Text
+                as='p'
+                color='#A1A5B7'
+                fontSize={{ base: '12px', xl: '13px', '2xl': '16px' }}
+                fontWeight='600'
+                ml='4px'
+              >
+                (6,234)
+              </Text>
+            </Flex>
+
+            <Button
+              colorScheme='pageButtonBlue'
+              color='white'
+              fontSize={{ base: '12px', '2xl': '14px' }}
+              height={{ base: '34px', '2xl': '38px' }}
+            >
+              Adicionar paciente
+            </Button>
+          </Flex>
         </Flex>
       </Flex>
     </Flex>
