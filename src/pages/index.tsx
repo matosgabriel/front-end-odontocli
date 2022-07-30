@@ -1,4 +1,4 @@
-import { Button, Flex, Image, Text, useBreakpoint, VStack } from '@chakra-ui/react';
+import { Button, calc, Flex, Image, Text, useBreakpoint, VStack } from '@chakra-ui/react';
 import Head from 'next/head';
 import { useEffect } from 'react';
 import { PageButton } from '../components/PageButton';
@@ -20,11 +20,11 @@ export default function Home() {
       <Flex width='100%' height='100vh' flexDir='column'>
         <Flex
           w='100%'
+          as='header'
           position='relative'
           _before={{ content: `''`, height: '1px', bg:'#E4E6EF', width: '100%', position: 'absolute', left: 0, bottom: 0 }}
         >
           <Flex
-            as='header'
             maxW='1650px'
             w='100%'
             h='94px'
@@ -39,7 +39,7 @@ export default function Home() {
         <Flex
           as='main'
           flexDir='row'
-          h='100%'
+          height='calc(100% - 94px)'
           w='100%'
           padding={{ '2xl': '45px 123px 0', xl: '30px 70px 0', lg: '20px 50px 0', sm: '15px 30px 0' }}
           align='flex-start'
@@ -120,11 +120,36 @@ export default function Home() {
 
             <VStack // Content main
               flexDir='column'
-              width='100%'
-              height='100%'
               mt={{ base: '26px', xl: '38px', '2xl': '62px' }}
               spacing='30px'
+              height='100%'
+              overflow='hidden'
+              overflowY='scroll'
+              sx={{ '&::-webkit-scrollbar': { display: 'none' } }}
+              pb='40px'
             >
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
               <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
             </VStack>
           </Flex>
