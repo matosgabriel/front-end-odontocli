@@ -2,12 +2,9 @@ import { Button, Flex, Image, Text, useBreakpoint, VStack } from '@chakra-ui/rea
 import Head from 'next/head';
 import { useEffect } from 'react';
 import { PageButton } from '../components/PageButton';
+import { PatientItem } from '../components/PatientItem';
 
 export default function Home() {
-  const getAvatarUrl = (name: string) => {
-    return `https://ui-avatars.com/api/?background=D7ECFF&color=0063BF&bold=true&size=100&font-size=0.55&rounded=true&name=${name[0]}`
-  };
-
   const breakpoint = useBreakpoint();
   
   useEffect(() => {
@@ -112,7 +109,7 @@ export default function Home() {
               </Flex>
 
               <Button
-                colorScheme='pageButtonBlue'
+                colorScheme='customBlue'
                 color='white'
                 fontSize={{ base: '10px', xl: '12px', '2xl': '14px' }}
                 height={{ base: '30px', xl: '34px', '2xl': '38px' }}
@@ -121,15 +118,15 @@ export default function Home() {
               </Button>
             </Flex>
 
-            <Flex // Content main
+            <VStack // Content main
               flexDir='column'
               width='100%'
               height='100%'
-              bg='#333'
-              mt={{ base: '15px', xl: '22px', '2xl': '32px' }}
+              mt={{ base: '26px', xl: '38px', '2xl': '62px' }}
+              spacing='30px'
             >
-              
-            </Flex>
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+            </VStack>
           </Flex>
         </Flex>
       </Flex>
