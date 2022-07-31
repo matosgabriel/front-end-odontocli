@@ -6,6 +6,17 @@ import { PatientItem } from '../components/PatientItem';
 
 import { Modal } from '../components/InfoModal';
 
+const patientTest = {
+  name: 'Gabriel Matos',
+  dataNascimento: '10/10/2010',
+  cpf: '111.111.111-11',
+  cidade: 'São Mateus',
+  cep: '39440-040',
+  logradouro: 'Rua Londrina',
+  numero: 214,
+  telefone: '(11) 12311-1232'
+}
+
 export default function Home() {
   const breakpoint = useBreakpoint();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -20,7 +31,7 @@ export default function Home() {
         <title>Odontocli | Home</title>
       </Head>
 
-      <Modal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
+      <Modal isOpen={isOpen} onOpen={onOpen} onClose={onClose} patient={patientTest} />
       
       <Flex width='100%' height='100vh' flexDir='column'>
         <Flex
