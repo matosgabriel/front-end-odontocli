@@ -1,12 +1,26 @@
-import { Button, calc, Flex, Image, Text, useBreakpoint, VStack } from '@chakra-ui/react';
+import { Button, Flex, Image, Text, useBreakpoint, useDisclosure, VStack } from '@chakra-ui/react';
 import Head from 'next/head';
 import { useEffect } from 'react';
 import { PageButton } from '../components/PageButton';
 import { PatientItem } from '../components/PatientItem';
 
+import { InfoModal } from '../components/InfoModal';
+
+const patientTest = {
+  name: 'Gabriel Matos',
+  dataNascimento: '10/10/2010',
+  cpf: '111.111.111-11',
+  cidade: 'São Mateus',
+  cep: '39440-040',
+  logradouro: 'Rua Londrina',
+  numero: 214,
+  telefone: '(11) 12311-1232'
+}
+
 export default function Home() {
   const breakpoint = useBreakpoint();
-  
+  const { isOpen: infoModalIsOpen, onOpen: onOpenInfoModal, onClose: onCloseInfoModal } = useDisclosure(); // Controls InfoModal
+
   useEffect(() => {
     console.log(breakpoint);
   }, [breakpoint]);
@@ -16,6 +30,8 @@ export default function Home() {
       <Head>
         <title>Odontocli | Home</title>
       </Head>
+
+      <InfoModal isOpen={infoModalIsOpen} onOpen={onOpenInfoModal} onClose={onCloseInfoModal} patient={patientTest} />
       
       <Flex width='100%' height='100vh' flexDir='column'>
         <Flex
@@ -128,29 +144,18 @@ export default function Home() {
               sx={{ '&::-webkit-scrollbar': { display: 'none' } }}
               pb='40px'
             >
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
+              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
             </VStack>
           </Flex>
         </Flex>
