@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import InputMask from 'react-input-mask';
 
@@ -7,7 +7,6 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
   Button,
@@ -16,7 +15,10 @@ import {
   Input,
   Box,
   Flex,
+  useDisclosure,
+  Select,
 } from '@chakra-ui/react';
+import { ConfirmationModal } from './ConfirmationModal';
 
 interface Patient {
   name: string;
@@ -36,9 +38,11 @@ interface ModalProps {
   patient: Patient;
 }
 
-function Modal({isOpen, onOpen, onClose, patient}: ModalProps) {
+function InfoModal({isOpen, onOpen, onClose, patient}: ModalProps) {
   const initialRef = React.useRef(null);
-  
+  const { isOpen: confirmModalIsOpen, onOpen: onOpenConfirmModal, onClose: onCloseConfirmModal } = useDisclosure(); // Controls the ConfirmModal
+  const [confirmModalMessage, setConfirmModalMessage] = useState('');
+
   const formik = useFormik({
     initialValues: patient,
     onSubmit: (values) => {
@@ -46,12 +50,30 @@ function Modal({isOpen, onOpen, onClose, patient}: ModalProps) {
     },
   });
 
+  const handleChangeSubmit = useCallback(() => {
+    setConfirmModalMessage('Alterar os dados de');
+    onOpenConfirmModal();
+  }, [onOpenConfirmModal]);
+
+  const handleDeleteSubmit = useCallback(() => {
+    setConfirmModalMessage('Deletar os dados de');
+    onOpenConfirmModal();
+  }, [onOpenConfirmModal]);
+
   useEffect(() => {
     // alert(JSON.stringify(patient));
   }, [patient]);
 
   return (
     <>
+      <ConfirmationModal
+        message={confirmModalMessage}
+        name={patient.name}
+        isOpen={confirmModalIsOpen}
+        onOpen={onOpenConfirmModal}
+        onClose={onCloseConfirmModal}
+      />
+
       <ChakraModal
         initialFocusRef={initialRef}
         // finalFocusRef={finalRef}
@@ -90,6 +112,7 @@ function Modal({isOpen, onOpen, onClose, patient}: ModalProps) {
                   <Input
                     as={InputMask}
                     mask='999.999.999-99'
+                    isDisabled
                     id='cpf'
                     placeholder='000.000.000-00'
                     value={formik.values.cpf}
@@ -99,7 +122,13 @@ function Modal({isOpen, onOpen, onClose, patient}: ModalProps) {
 
                 <FormControl>
                   <FormLabel>Cidade</FormLabel>
-                  <Input id='cidade' placeholder='Dubai' value={formik.values.cidade} onChange={formik.handleChange} />
+                  {/* <Input id='cidade' placeholder='Dubai' value={formik.values.cidade} onChange={formik.handleChange} /> */}
+                  <Select id='cidade' placeholder='Selecione a cidade' value={formik.values.cidade} onChange={formik.handleChange}>
+                    <option value='São Mateus'>São Mateus</option>
+                    <option value='Linhares'>Linhares</option>
+                    <option value='Vila Velha'>Vila Velha</option>
+                    <option value='Vitória'>Vitória</option>
+                  </Select>
                 </FormControl>
 
                 <FormControl>
@@ -139,11 +168,11 @@ function Modal({isOpen, onOpen, onClose, patient}: ModalProps) {
               </Box>
 
               <Flex mt='50px' align='center' justify='center'>
-                <Button fontWeight='500' colorScheme='customYellow' textColor='white' type='submit'>
+                <Button fontWeight='500' colorScheme='customYellow' textColor='white' onClick={handleChangeSubmit}>
                   Alterar
                 </Button>
                 
-                <Button fontWeight='500' colorScheme='customRed' ml={3}>
+                <Button fontWeight='500' colorScheme='customRed' ml={3} onClick={handleDeleteSubmit}>
                   Deletar
                 </Button>
                   
@@ -163,4 +192,4 @@ function Modal({isOpen, onOpen, onClose, patient}: ModalProps) {
   );
 }
 
-export { Modal }
+export { InfoModal }
