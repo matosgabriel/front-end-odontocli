@@ -1,4 +1,4 @@
-import { Box, Button, calc, Flex, Image, Text, useBreakpoint, useDisclosure, VStack } from '@chakra-ui/react';
+import { Button, Flex, Image, Text, useBreakpoint, useDisclosure, VStack } from '@chakra-ui/react';
 import Head from 'next/head';
 import { useEffect } from 'react';
 import { PageButton } from '../components/PageButton';

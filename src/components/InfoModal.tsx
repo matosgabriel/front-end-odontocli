@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
+import InputMask from 'react-input-mask';
 
 import {
   Modal as ChakraModal,
@@ -37,8 +38,6 @@ interface ModalProps {
 
 function Modal({isOpen, onOpen, onClose, patient}: ModalProps) {
   const initialRef = React.useRef(null);
-
-  const [patientInfo, setPatientInfo] = useState({} as Patient);
   
   const formik = useFormik({
     initialValues: patient,
@@ -76,12 +75,26 @@ function Modal({isOpen, onOpen, onClose, patient}: ModalProps) {
 
                 <FormControl>
                   <FormLabel>Data de nascimento</FormLabel>
-                  <Input id='dataNascimento' placeholder='00/00/0000' value={formik.values.dataNascimento} onChange={formik.handleChange} />
+                  <Input
+                    as={InputMask}
+                    mask='99/99/9999'
+                    id='dataNascimento'
+                    placeholder='00/00/0000'
+                    value={formik.values.dataNascimento}
+                    onChange={formik.handleChange}
+                  />
                 </FormControl>
 
                 <FormControl>
                   <FormLabel>CPF</FormLabel>
-                  <Input id='cpf' placeholder='000.000.000-00' value={formik.values.cpf} onChange={formik.handleChange} />
+                  <Input
+                    as={InputMask}
+                    mask='999.999.999-99'
+                    id='cpf'
+                    placeholder='000.000.000-00'
+                    value={formik.values.cpf}
+                    onChange={formik.handleChange}
+                  />
                 </FormControl>
 
                 <FormControl>
@@ -91,7 +104,14 @@ function Modal({isOpen, onOpen, onClose, patient}: ModalProps) {
 
                 <FormControl>
                   <FormLabel>CEP</FormLabel>
-                  <Input id='cep' placeholder='00000-000' value={formik.values.cep} onChange={formik.handleChange} />
+                  <Input
+                    as={InputMask}
+                    mask='99999-999'
+                    id='cep'
+                    placeholder='00000-000'
+                    value={formik.values.cep}
+                    onChange={formik.handleChange}
+                  />
                 </FormControl>
 
                 <FormControl>
@@ -106,7 +126,15 @@ function Modal({isOpen, onOpen, onClose, patient}: ModalProps) {
 
                 <FormControl>
                   <FormLabel>Telefone</FormLabel>
-                  <Input id='telefone' placeholder='(00) 00000-0000' value={formik.values.telefone} onChange={formik.handleChange} />
+                  <Input
+                    as={InputMask}
+                    mask='(99) 99999-9999'
+                    id='telefone'
+                    placeholder='(00)
+                    00000-0000'
+                    value={formik.values.telefone}
+                    onChange={formik.handleChange}
+                  />
                 </FormControl>
               </Box>
 
