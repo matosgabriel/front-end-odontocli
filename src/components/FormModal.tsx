@@ -89,7 +89,7 @@ function FormModal({isOpen, onOpen, onClose, patient}: FormModalProps) {
               <Box display='grid' gridTemplateColumns={{ base: '1fr 1fr', xl: '1fr 1fr 1fr' }} gap='20px'>
                 <FormControl>
                   <FormLabel>Nome completo</FormLabel>
-                  <Input id='name' ref={initialRef} placeholder='Fulano da Silva' value={formik.values.nomeCompleto} onChange={formik.handleChange} />
+                  <Input id='nomeCompleto' ref={initialRef} placeholder='Fulano da Silva' value={formik.values.nomeCompleto} onChange={formik.handleChange} />
                 </FormControl>
 
                 <FormControl>
@@ -97,7 +97,7 @@ function FormModal({isOpen, onOpen, onClose, patient}: FormModalProps) {
                   <Input
                     as={InputMask}
                     mask='99/99/9999'
-                    id='dataNascimento'
+                    id='dtNascimento'
                     placeholder='00/00/0000'
                     value={formik.values.dtNascimento}
                     onChange={formik.handleChange}
@@ -133,7 +133,7 @@ function FormModal({isOpen, onOpen, onClose, patient}: FormModalProps) {
                   <Input
                     as={InputMask}
                     mask='99999-999'
-                    id='cep'
+                    id='cepEndereco'
                     placeholder='00000-000'
                     value={formik.values.cepEndereco}
                     onChange={formik.handleChange}
@@ -142,12 +142,12 @@ function FormModal({isOpen, onOpen, onClose, patient}: FormModalProps) {
 
                 <FormControl>
                   <FormLabel>Logradouro</FormLabel>
-                  <Input id='logradouro' placeholder='Rua dos bobos' value={formik.values.logradouroEndereco} onChange={formik.handleChange} />
+                  <Input id='logradouroEndereco' placeholder='Rua dos bobos' value={formik.values.logradouroEndereco} onChange={formik.handleChange} />
                 </FormControl>
 
                 <FormControl>
                   <FormLabel>Número</FormLabel>
-                  <Input id='numero' type='number' placeholder='0' value={formik.values.numeroEndereco} onChange={formik.handleChange} />
+                  <Input id='numeroEndereco' type='number' placeholder='0' value={formik.values.numeroEndereco} onChange={formik.handleChange} />
                 </FormControl>
 
                 <FormControl>
