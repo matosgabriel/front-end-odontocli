@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import InputMask from 'react-input-mask';
 
+import { IPatient } from '../pages';
+
 import {
   Modal as ChakraModal,
   ModalOverlay,
@@ -20,25 +22,14 @@ import {
 } from '@chakra-ui/react';
 import { ConfirmationModal } from './ConfirmationModal';
 
-interface Patient {
-  name: string;
-  dataNascimento: string;
-  cpf: string;
-  cidade: string;
-  cep: string;
-  logradouro: string;
-  numero: number;
-  telefone: string;
-}
-
-interface ModalProps {
+interface FormModalProps {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
-  patient: Patient;
+  patient: IPatient;
 }
 
-function InfoModal({isOpen, onOpen, onClose, patient}: ModalProps) {
+function FormModal({isOpen, onOpen, onClose, patient}: FormModalProps) {
   const initialRef = React.useRef(null);
   const { isOpen: confirmModalIsOpen, onOpen: onOpenConfirmModal, onClose: onCloseConfirmModal } = useDisclosure(); // Controls the ConfirmModal
   const [confirmModalMessage, setConfirmModalMessage] = useState('');
@@ -49,6 +40,12 @@ function InfoModal({isOpen, onOpen, onClose, patient}: ModalProps) {
       alert(JSON.stringify(values, null, 2))
     },
   });
+
+  useEffect(() => {
+    console.log(patient);
+    // formik.setFieldValue('nomeCompleto', patient.nomeCompleto, true);
+    formik.setValues(patient, true);
+  }, [patient]);
 
   const handleChangeSubmit = useCallback(() => {
     setConfirmModalMessage('Alterar os dados de');
@@ -68,7 +65,7 @@ function InfoModal({isOpen, onOpen, onClose, patient}: ModalProps) {
     <>
       <ConfirmationModal
         message={confirmModalMessage}
-        name={patient.name}
+        name={patient.nomeCompleto}
         isOpen={confirmModalIsOpen}
         onOpen={onOpenConfirmModal}
         onClose={onCloseConfirmModal}
@@ -92,7 +89,7 @@ function InfoModal({isOpen, onOpen, onClose, patient}: ModalProps) {
               <Box display='grid' gridTemplateColumns={{ base: '1fr 1fr', xl: '1fr 1fr 1fr' }} gap='20px'>
                 <FormControl>
                   <FormLabel>Nome completo</FormLabel>
-                  <Input id='name' ref={initialRef} placeholder='Fulano da Silva' value={formik.values.name} onChange={formik.handleChange} />
+                  <Input id='nomeCompleto' ref={initialRef} placeholder='Fulano da Silva' value={formik.values.nomeCompleto} onChange={formik.handleChange} />
                 </FormControl>
 
                 <FormControl>
@@ -100,9 +97,9 @@ function InfoModal({isOpen, onOpen, onClose, patient}: ModalProps) {
                   <Input
                     as={InputMask}
                     mask='99/99/9999'
-                    id='dataNascimento'
+                    id='dtNascimento'
                     placeholder='00/00/0000'
-                    value={formik.values.dataNascimento}
+                    value={formik.values.dtNascimento}
                     onChange={formik.handleChange}
                   />
                 </FormControl>
@@ -123,7 +120,7 @@ function InfoModal({isOpen, onOpen, onClose, patient}: ModalProps) {
                 <FormControl>
                   <FormLabel>Cidade</FormLabel>
                   {/* <Input id='cidade' placeholder='Dubai' value={formik.values.cidade} onChange={formik.handleChange} /> */}
-                  <Select id='cidade' placeholder='Selecione a cidade' value={formik.values.cidade} onChange={formik.handleChange}>
+                  <Select id='cidade.nomeCidade' placeholder='Selecione a cidade' value={formik.values.cidade.nomeCidade} onChange={formik.handleChange}>
                     <option value='São Mateus'>São Mateus</option>
                     <option value='Linhares'>Linhares</option>
                     <option value='Vila Velha'>Vila Velha</option>
@@ -136,21 +133,21 @@ function InfoModal({isOpen, onOpen, onClose, patient}: ModalProps) {
                   <Input
                     as={InputMask}
                     mask='99999-999'
-                    id='cep'
+                    id='cepEndereco'
                     placeholder='00000-000'
-                    value={formik.values.cep}
+                    value={formik.values.cepEndereco}
                     onChange={formik.handleChange}
                   />
                 </FormControl>
 
                 <FormControl>
                   <FormLabel>Logradouro</FormLabel>
-                  <Input id='logradouro' placeholder='Rua dos bobos' value={formik.values.logradouro} onChange={formik.handleChange} />
+                  <Input id='logradouroEndereco' placeholder='Rua dos bobos' value={formik.values.logradouroEndereco} onChange={formik.handleChange} />
                 </FormControl>
 
                 <FormControl>
                   <FormLabel>Número</FormLabel>
-                  <Input id='numero' type='number' placeholder='0' value={formik.values.numero} onChange={formik.handleChange} />
+                  <Input id='numeroEndereco' type='number' placeholder='0' value={formik.values.numeroEndereco} onChange={formik.handleChange} />
                 </FormControl>
 
                 <FormControl>
@@ -168,7 +165,7 @@ function InfoModal({isOpen, onOpen, onClose, patient}: ModalProps) {
               </Box>
 
               <Flex mt='50px' align='center' justify='center'>
-                <Button fontWeight='500' colorScheme='customYellow' textColor='white' onClick={handleChangeSubmit}>
+                <Button fontWeight='500' colorScheme='customYellow' textColor='white' type='submit'>
                   Alterar
                 </Button>
                 
@@ -192,4 +189,4 @@ function InfoModal({isOpen, onOpen, onClose, patient}: ModalProps) {
   );
 }
 
-export { InfoModal }
+export { FormModal }

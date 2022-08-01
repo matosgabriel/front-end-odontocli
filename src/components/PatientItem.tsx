@@ -16,7 +16,7 @@ function PatientItem({ name, phone, onClick }: PatientItemProps) {
     <Flex align='center' justify='space-between' width='100%'>
       <Flex align='center'> {/* Info container */}
         <Image
-          src={getAvatarUrl('Gabriel Matos')}
+          src={getAvatarUrl(name)}
           alt='Avatar'
           height={{ base: '30px', xl: '34px', '2xl': '40px' }}
         />

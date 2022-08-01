@@ -1,29 +1,68 @@
-import { Button, Flex, Image, Text, useBreakpoint, useDisclosure, VStack } from '@chakra-ui/react';
+import { Button, Flex, Image, Text, useDisclosure, VStack } from '@chakra-ui/react';
 import Head from 'next/head';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { PageButton } from '../components/PageButton';
 import { PatientItem } from '../components/PatientItem';
 
-import { InfoModal } from '../components/InfoModal';
+import { FormModal } from '../components/FormModal';
+import { api } from '../utils/api';
 
-const patientTest = {
-  name: 'Gabriel Matos',
-  dataNascimento: '10/10/2010',
+const defaultPatient = {
+  nomeCompleto: 'Fulano',
+  dtNascimento: '00/00/0000',
   cpf: '111.111.111-11',
-  cidade: 'São Mateus',
-  cep: '39440-040',
-  logradouro: 'Rua Londrina',
-  numero: 214,
-  telefone: '(11) 12311-1232'
+  cidade: {
+    idCidade: '00000000-0000-0000-0000-00000000',
+    nomeCidade: 'Cidade',
+    uf: 'ES'
+  },
+  cepEndereco: '00000-000',
+  logradouroEndereco: 'Rua 1',
+  numeroEndereco: 1,
+  telefone: '(000) 00000-0000'
+}
+
+export interface IPatient {
+  cpf: string;
+  nomeCompleto: string;
+  telefone: string;
+  dtNascimento: string;
+  numeroEndereco: number;
+  logradouroEndereco: string;
+  cepEndereco: string;
+  cidade: {
+    idCidade: string;
+    nomeCidade: string;
+    uf: string;
+  }
 }
 
 export default function Home() {
-  const breakpoint = useBreakpoint();
-  const { isOpen: infoModalIsOpen, onOpen: onOpenInfoModal, onClose: onCloseInfoModal } = useDisclosure(); // Controls InfoModal
+  const { isOpen: formModalIsOpen, onOpen: onOpenFormModal, onClose: onCloseFormModal } = useDisclosure(); // Controls InfoModal
+  const [totalPatientsCount, setTotalPatientsCount] = useState(0);
+  const [patients, setPatients] = useState([] as IPatient[]);
+  const [selectedPatient, setSelectedPatient] = useState<IPatient | undefined>(undefined);
+
+  function handleClickVisualize(patient: IPatient) {
+    onCloseFormModal();
+    setSelectedPatient(patient);
+
+    // console.log(patient);
+
+    onOpenFormModal();
+  }
 
   useEffect(() => {
-    console.log(breakpoint);
-  }, [breakpoint]);
+    async function loadPacientes() {
+      const { data: patientsCount } = await api.get('/paciente/count');
+      const { data: patientsLoaded } = await api.get('/paciente/list');
+
+      setTotalPatientsCount(patientsCount);
+      setPatients(patientsLoaded);
+    }
+
+    loadPacientes();
+  }, []);
 
   return (
     <>
@@ -31,7 +70,9 @@ export default function Home() {
         <title>Odontocli | Home</title>
       </Head>
 
-      <InfoModal isOpen={infoModalIsOpen} onOpen={onOpenInfoModal} onClose={onCloseInfoModal} patient={patientTest} />
+      { (selectedPatient != undefined) && // Checking if selectPatient its not a empty object
+        <FormModal isOpen={formModalIsOpen} onOpen={onOpenFormModal} onClose={onCloseFormModal} patient={selectedPatient} />
+      }
       
       <Flex width='100%' height='100vh' flexDir='column'>
         <Flex
@@ -120,7 +161,7 @@ export default function Home() {
                   fontWeight='600'
                   ml='4px'
                 >
-                  (6,234)
+                  ({ totalPatientsCount })
                 </Text>
               </Flex>
 
@@ -129,6 +170,7 @@ export default function Home() {
                 color='white'
                 fontSize={{ base: '10px', xl: '12px', '2xl': '14px' }}
                 height={{ base: '30px', xl: '34px', '2xl': '38px' }}
+                onClick={onOpenFormModal}
               >
                 Adicionar paciente
               </Button>
@@ -144,18 +186,16 @@ export default function Home() {
               sx={{ '&::-webkit-scrollbar': { display: 'none' } }}
               pb='40px'
             >
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
-              <PatientItem name='Gabriel Matos' phone='11 9912-3123' onClick={onOpenInfoModal} />
+              { patients.map(patient => {
+                return (
+                  <PatientItem
+                    key={patient.cpf}
+                    name={patient.nomeCompleto}
+                    phone={patient.telefone}
+                    onClick={() => handleClickVisualize(patient)}
+                  />
+                );
+              }) }
             </VStack>
           </Flex>
         </Flex>
