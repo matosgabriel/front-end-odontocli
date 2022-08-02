@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import InputMask from 'react-input-mask';
 
-import { IPatient } from '../pages';
+import { IPatient, ICity } from '../pages';
 
 import {
   Modal as ChakraModal,
@@ -27,9 +27,10 @@ interface FormModalProps {
   onOpen: () => void;
   onClose: () => void;
   patient: IPatient;
+  cities: ICity[];
 }
 
-function FormModal({isOpen, onOpen, onClose, patient}: FormModalProps) {
+function FormModal({isOpen, onOpen, onClose, patient, cities}: FormModalProps) {
   const initialRef = React.useRef(null);
   const { isOpen: confirmModalIsOpen, onOpen: onOpenConfirmModal, onClose: onCloseConfirmModal } = useDisclosure(); // Controls the ConfirmModal
   const [confirmModalMessage, setConfirmModalMessage] = useState('');
@@ -45,7 +46,7 @@ function FormModal({isOpen, onOpen, onClose, patient}: FormModalProps) {
     console.log(patient);
     // formik.setFieldValue('nomeCompleto', patient.nomeCompleto, true);
     formik.setValues(patient, true);
-  }, [patient]);
+  });
 
   const handleChangeSubmit = useCallback(() => {
     setConfirmModalMessage('Alterar os dados de');
@@ -121,10 +122,11 @@ function FormModal({isOpen, onOpen, onClose, patient}: FormModalProps) {
                   <FormLabel>Cidade</FormLabel>
                   {/* <Input id='cidade' placeholder='Dubai' value={formik.values.cidade} onChange={formik.handleChange} /> */}
                   <Select id='cidade.nomeCidade' placeholder='Selecione a cidade' value={formik.values.cidade.nomeCidade} onChange={formik.handleChange}>
-                    <option value='São Mateus'>São Mateus</option>
-                    <option value='Linhares'>Linhares</option>
-                    <option value='Vila Velha'>Vila Velha</option>
-                    <option value='Vitória'>Vitória</option>
+                    { cities.map(city => {
+                      return (
+                        <option key={city.id} value={city.nomeCidade}>{ city.nomeCidade }</option>
+                      );
+                    }) }
                   </Select>
                 </FormControl>
 
