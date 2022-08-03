@@ -37,17 +37,24 @@ export interface IPatient {
   }
 }
 
+export interface ICity {
+  id: string;
+  nomeCidade: string;
+  uf: string;
+}
+
 export default function Home() {
   const { isOpen: formModalIsOpen, onOpen: onOpenFormModal, onClose: onCloseFormModal } = useDisclosure(); // Controls InfoModal
   const [totalPatientsCount, setTotalPatientsCount] = useState(0);
   const [patients, setPatients] = useState([] as IPatient[]);
+  const [cities, setCities] = useState([] as ICity[]);
   const [selectedPatient, setSelectedPatient] = useState<IPatient | undefined>(undefined);
 
   function handleClickVisualize(patient: IPatient) {
     onCloseFormModal();
+    console.log(patient);
     setSelectedPatient(patient);
 
-    // console.log(patient);
 
     onOpenFormModal();
   }
@@ -56,9 +63,11 @@ export default function Home() {
     async function loadPacientes() {
       const { data: patientsCount } = await api.get('/paciente/count');
       const { data: patientsLoaded } = await api.get('/paciente/list');
+      const { data: loadedCities } = await api.get('/cidade/list');
 
       setTotalPatientsCount(patientsCount);
       setPatients(patientsLoaded);
+      setCities(loadedCities);
     }
 
     loadPacientes();
@@ -71,7 +80,7 @@ export default function Home() {
       </Head>
 
       { (selectedPatient != undefined) && // Checking if selectPatient its not a empty object
-        <FormModal isOpen={formModalIsOpen} onOpen={onOpenFormModal} onClose={onCloseFormModal} patient={selectedPatient} />
+        <FormModal isOpen={formModalIsOpen} onOpen={onOpenFormModal} onClose={onCloseFormModal} patient={selectedPatient} cities={cities} />
       }
       
       <Flex width='100%' height='100vh' flexDir='column'>
