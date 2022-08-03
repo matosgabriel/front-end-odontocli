@@ -46,7 +46,7 @@ function FormModal({isOpen, onOpen, onClose, patient, cities}: FormModalProps) {
     console.log(patient);
     // formik.setFieldValue('nomeCompleto', patient.nomeCompleto, true);
     formik.setValues(patient, true);
-  });
+  }, []);
 
   const handleChangeSubmit = useCallback(() => {
     setConfirmModalMessage('Alterar os dados de');
