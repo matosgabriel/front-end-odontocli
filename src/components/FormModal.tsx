@@ -39,7 +39,8 @@ const dateRegex = /^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/;
 const nameRegex = /^[A-ZÀ-Ÿ][A-zÀ-ÿ']+\s([A-zÀ-ÿ']\s?)*[A-ZÀ-Ÿ][A-zÀ-ÿ']+$/;
 
 const schema = yup.object().shape({
-  nomeCompleto: yup.string().required("O nome do paciente é obrigatório!").matches(nameRegex, "O nome do paciente deve estar no formato certo!"),
+  cpf: yup.string().required("O cpf é obrigatório!").max(11, "A quantidade de números é onze!").min(11, "A quantidade de números é onze!").matches(/^[0-9]+$/, "O cpf aceita apenas números!"),
+  nomeCompleto: yup.string().required("O nome do paciente é obrigatório!").matches(nameRegex, "Formato do nome inválido!"),
   telefone: yup.string().required("O telefone é obrigatório!").matches(/^[0-9]+$/, "O telefone aceita apenas números!").max(12, "A quantidade de números do telefone é 12!").min(12, "A quantidade de números do telefone é 12!"),
   dtNascimento: yup.string().required("A data de nascimento é obrigatória!").matches(dateRegex, "O formato deve ser dd/mm/yyyy!"),
   numeroEndereco: yup.string().required("O número de endereço é obrigatório!").matches(/^[0-9]+$/, "O número de endereço aceita apenas números!"),
@@ -57,7 +58,7 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
   const formik = useFormik({
     initialValues: { ...patient },
     validationSchema: schema,
-    validateOnBlur: false,
+    validateOnBlur: true,
     validateOnChange: false,
     onSubmit: (values, { validateForm }) => {
       validateForm(values);
@@ -67,7 +68,6 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
 
   useEffect(() => {
     // formik.setFieldValue('nomeCompleto', patient.nomeCompleto, true);
-    
     !!patient ? formik.setValues({ ...patient }, true) : formik.resetForm();
   }, [patient]); // eslint-disable-line
 
@@ -121,6 +121,7 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
                     placeholder='Fulano da Silva'
                     value={formik.values.nomeCompleto}
                     onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
                   <FormErrorMessage>{ formik.errors.nomeCompleto }</FormErrorMessage>
                 </FormControl>
@@ -134,21 +135,30 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
                     placeholder='00/00/0000'
                     value={formik.values.dtNascimento}
                     onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
                   <FormErrorMessage>{ formik.errors.dtNascimento }</FormErrorMessage>
                 </FormControl>
 
-                <FormControl>
+                <FormControl isInvalid={!!formik.errors.cpf}>
                   <FormLabel>CPF</FormLabel>
                   <Input
                     as={InputMask}
                     mask='999.999.999-99'
-                    isDisabled
+                    isDisabled={!!patient}
                     id='cpf'
                     placeholder='000.000.000-00'
                     value={formik.values.cpf}
-                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    onChange={(e) => {
+                      const oldTargetValue = e.target.value
+                      e.target.value = oldTargetValue.replace(/[^0-9]/g, '');
+
+                      formik.handleChange(e);
+                      e.target.value = oldTargetValue;
+                    }}
                   />
+                  <FormErrorMessage>{ formik.errors.cpf }</FormErrorMessage>
                 </FormControl>
 
                 <FormControl isInvalid={!!formik.errors.cidade}>
@@ -157,6 +167,7 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
                     id='cidade'
                     placeholder='Selecione a cidade'
                     value={formik.values.cidade}
+                    onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
                   >
                     { cities.map(city => {
@@ -177,19 +188,33 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
                     placeholder='00000-000'
                     value={formik.values.cepEndereco}
                     onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
                   <FormErrorMessage>{ formik.errors.cepEndereco }</FormErrorMessage>
                 </FormControl>
 
                 <FormControl isInvalid={!!formik.errors.logradouroEndereco}>
                   <FormLabel>Logradouro</FormLabel>
-                  <Input id='logradouroEndereco' placeholder='Rua dos bobos' value={formik.values.logradouroEndereco} onChange={formik.handleChange} />
+                  <Input
+                    id='logradouroEndereco'
+                    placeholder='Avenida'
+                    value={formik.values.logradouroEndereco}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
                   <FormErrorMessage>{ formik.errors.logradouroEndereco }</FormErrorMessage>
                 </FormControl>
 
                 <FormControl isInvalid={!!formik.errors.numeroEndereco}>
                   <FormLabel>Número</FormLabel>
-                  <Input id='numeroEndereco' type='number' placeholder='0' value={formik.values.numeroEndereco} onChange={formik.handleChange} />
+                  <Input
+                    id='numeroEndereco'
+                    type='number'
+                    placeholder='0'
+                    value={formik.values.numeroEndereco}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
                   <FormErrorMessage>{ formik.errors.numeroEndereco }</FormErrorMessage>
                 </FormControl>
 
@@ -201,9 +226,10 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
                     id='telefone'
                     placeholder='(000) 00000-0000'
                     value={formik.values.telefone}
+                    onBlur={formik.handleBlur}
                     onChange={(e) => {
                       const oldTargetValue = e.target.value;
-                      e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                      e.target.value = oldTargetValue.replace(/[^0-9]/g, '');
 
                       formik.handleChange(e);
                       e.target.value = oldTargetValue;
@@ -214,14 +240,16 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
               </Box>
 
               <Flex mt='50px' align='center' justify='center'>
-                <Button fontWeight='500' colorScheme='customYellow' textColor='white' type='submit'>
-                  Alterar
-                </Button>
+                { patient ? <>
+                  <Button fontWeight='500' colorScheme='customYellow' textColor='white' type='submit'>
+                    Alterar
+                  </Button>
                 
-                <Button fontWeight='500' colorScheme='customRed' ml={3} onClick={handleDeleteSubmit}>
-                  Deletar
-                </Button>
-                  
+                  <Button fontWeight='500' colorScheme='customRed' ml={3} onClick={handleDeleteSubmit}>
+                    Deletar
+                  </Button> </>
+                  : <Button colorScheme='customGreen' fontWeight='500' type='submit'>Cadastrar</Button>
+                }
               </Flex>
             </form>
           </ModalBody>
