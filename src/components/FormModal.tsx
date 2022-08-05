@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import InputMask from 'react-input-mask';
 
-import { IPatient, ICity } from '../pages';
+import { ICity, IPatientRequest } from '../pages';
 
 import {
   Modal as ChakraModal,
@@ -14,53 +14,70 @@ import {
   Button,
   FormControl,
   FormLabel,
+  FormErrorMessage,
   Input,
   Box,
   Flex,
   useDisclosure,
   Select,
 } from '@chakra-ui/react';
+
 import { ConfirmationModal } from './ConfirmationModal';
+
+import * as yup from 'yup';
 
 interface FormModalProps {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
-  patient: IPatient;
+  patient: IPatientRequest;
   cities: ICity[];
+  loadPatients: () => Promise<void>;
 }
 
-function FormModal({isOpen, onOpen, onClose, patient, cities}: FormModalProps) {
+const dateRegex = /^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/;
+const nameRegex = /^[A-ZÀ-Ÿ][A-zÀ-ÿ']+\s([A-zÀ-ÿ']\s?)*[A-ZÀ-Ÿ][A-zÀ-ÿ']+$/;
+
+const schema = yup.object().shape({
+  nomeCompleto: yup.string().required("O nome do paciente é obrigatório!").matches(nameRegex, "O nome do paciente deve estar no formato certo!"),
+  telefone: yup.string().required("O telefone é obrigatório!").matches(/^[0-9]+$/, "O telefone aceita apenas números!").max(12, "A quantidade de números do telefone é 12!").min(12, "A quantidade de números do telefone é 12!"),
+  dtNascimento: yup.string().required("A data de nascimento é obrigatória!").matches(dateRegex, "O formato deve ser dd/mm/yyyy!"),
+  numeroEndereco: yup.string().required("O número de endereço é obrigatório!").matches(/^[0-9]+$/, "O número de endereço aceita apenas números!"),
+  logradouroEndereco: yup.string().required("O logradouro é obrigatório!").matches(/^[aA-zZ]+$/, "O logradouro deve conter apenas letras!"),
+  cepEndereco: yup.string().required("O cep é obrigatório!").matches(/^([0-9]{5})\-([0-9]{3})$/, "O formato do cep deve ser nnnnn-nnn!"),
+  cidade: yup.string().required("A cidade é obrigatória!"),
+});
+
+function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: FormModalProps) {
   const initialRef = React.useRef(null);
   const { isOpen: confirmModalIsOpen, onOpen: onOpenConfirmModal, onClose: onCloseConfirmModal } = useDisclosure(); // Controls the ConfirmModal
   const [confirmModalMessage, setConfirmModalMessage] = useState('');
+  const [confirmModalType, setConfirmModalType] = useState<'update' | 'delete'>('update');
 
   const formik = useFormik({
     initialValues: patient,
+    validationSchema: schema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2))
+      handleChangeSubmit();
     },
   });
 
   useEffect(() => {
-    console.log(patient);
     // formik.setFieldValue('nomeCompleto', patient.nomeCompleto, true);
     formik.setValues(patient, true);
-  }, []);
+  }, [patient]); // eslint-disable-line
 
   const handleChangeSubmit = useCallback(() => {
     setConfirmModalMessage('Alterar os dados de');
+    setConfirmModalType('update');
     onOpenConfirmModal();
   }, [onOpenConfirmModal]);
 
   const handleDeleteSubmit = useCallback(() => {
     setConfirmModalMessage('Deletar os dados de');
+    setConfirmModalType('delete');
     onOpenConfirmModal();
   }, [onOpenConfirmModal]);
-
-  useEffect(() => {
-    // alert(JSON.stringify(patient));
-  }, [patient]);
 
   return (
     <>
@@ -70,6 +87,10 @@ function FormModal({isOpen, onOpen, onClose, patient, cities}: FormModalProps) {
         isOpen={confirmModalIsOpen}
         onOpen={onOpenConfirmModal}
         onClose={onCloseConfirmModal}
+        patientRequestData={formik.values}
+        onCloseFormModal={onClose}
+        loadPatients={loadPatients}
+        type={confirmModalType}
       />
 
       <ChakraModal
@@ -88,12 +109,19 @@ function FormModal({isOpen, onOpen, onClose, patient, cities}: FormModalProps) {
           <ModalBody pb={6}>
             <form onSubmit={formik.handleSubmit}>
               <Box display='grid' gridTemplateColumns={{ base: '1fr 1fr', xl: '1fr 1fr 1fr' }} gap='20px'>
-                <FormControl>
+                <FormControl isInvalid={!!formik.errors.nomeCompleto}>
                   <FormLabel>Nome completo</FormLabel>
-                  <Input id='nomeCompleto' ref={initialRef} placeholder='Fulano da Silva' value={formik.values.nomeCompleto} onChange={formik.handleChange} />
+                  <Input
+                    id='nomeCompleto'
+                    ref={initialRef}
+                    placeholder='Fulano da Silva'
+                    value={formik.values.nomeCompleto}
+                    onChange={formik.handleChange}
+                  />
+                  <FormErrorMessage>{ formik.errors.nomeCompleto }</FormErrorMessage>
                 </FormControl>
 
-                <FormControl>
+                <FormControl isInvalid={!!formik.errors.dtNascimento}>
                   <FormLabel>Data de nascimento</FormLabel>
                   <Input
                     as={InputMask}
@@ -103,6 +131,7 @@ function FormModal({isOpen, onOpen, onClose, patient, cities}: FormModalProps) {
                     value={formik.values.dtNascimento}
                     onChange={formik.handleChange}
                   />
+                  <FormErrorMessage>{ formik.errors.dtNascimento }</FormErrorMessage>
                 </FormControl>
 
                 <FormControl>
@@ -118,19 +147,24 @@ function FormModal({isOpen, onOpen, onClose, patient, cities}: FormModalProps) {
                   />
                 </FormControl>
 
-                <FormControl>
+                <FormControl isInvalid={!!formik.errors.cidade}>
                   <FormLabel>Cidade</FormLabel>
-                  {/* <Input id='cidade' placeholder='Dubai' value={formik.values.cidade} onChange={formik.handleChange} /> */}
-                  <Select id='cidade.nomeCidade' placeholder='Selecione a cidade' value={formik.values.cidade.nomeCidade} onChange={formik.handleChange}>
+                  <Select
+                    id='cidade'
+                    placeholder='Selecione a cidade'
+                    value={formik.values.cidade}
+                    onChange={formik.handleChange}
+                  >
                     { cities.map(city => {
                       return (
-                        <option key={city.id} value={city.nomeCidade}>{ city.nomeCidade }</option>
+                        <option key={city.idCidade} value={city.idCidade}>{ city.nomeCidade }</option>
                       );
                     }) }
                   </Select>
+                  <FormErrorMessage>{ formik.errors.cidade }</FormErrorMessage>
                 </FormControl>
 
-                <FormControl>
+                <FormControl isInvalid={!!formik.errors.cepEndereco}>
                   <FormLabel>CEP</FormLabel>
                   <Input
                     as={InputMask}
@@ -140,29 +174,38 @@ function FormModal({isOpen, onOpen, onClose, patient, cities}: FormModalProps) {
                     value={formik.values.cepEndereco}
                     onChange={formik.handleChange}
                   />
+                  <FormErrorMessage>{ formik.errors.cepEndereco }</FormErrorMessage>
                 </FormControl>
 
-                <FormControl>
+                <FormControl isInvalid={!!formik.errors.logradouroEndereco}>
                   <FormLabel>Logradouro</FormLabel>
                   <Input id='logradouroEndereco' placeholder='Rua dos bobos' value={formik.values.logradouroEndereco} onChange={formik.handleChange} />
+                  <FormErrorMessage>{ formik.errors.logradouroEndereco }</FormErrorMessage>
                 </FormControl>
 
-                <FormControl>
+                <FormControl isInvalid={!!formik.errors.numeroEndereco}>
                   <FormLabel>Número</FormLabel>
                   <Input id='numeroEndereco' type='number' placeholder='0' value={formik.values.numeroEndereco} onChange={formik.handleChange} />
+                  <FormErrorMessage>{ formik.errors.numeroEndereco }</FormErrorMessage>
                 </FormControl>
 
-                <FormControl>
+                <FormControl isInvalid={!!formik.errors.telefone }>
                   <FormLabel>Telefone</FormLabel>
                   <Input
                     as={InputMask}
-                    mask='(99) 99999-9999'
+                    mask='(999) 99999-9999'
                     id='telefone'
-                    placeholder='(00)
-                    00000-0000'
+                    placeholder='(000) 00000-0000'
                     value={formik.values.telefone}
-                    onChange={formik.handleChange}
+                    onChange={(e) => {
+                      const oldTargetValue = e.target.value;
+                      e.target.value = e.target.value.replace(/[^0-9]/g, '');
+
+                      formik.handleChange(e);
+                      e.target.value = oldTargetValue;
+                    }}
                   />
+                  <FormErrorMessage> {formik.errors.telefone} </FormErrorMessage>
                 </FormControl>
               </Box>
 
@@ -178,13 +221,6 @@ function FormModal({isOpen, onOpen, onClose, patient, cities}: FormModalProps) {
               </Flex>
             </form>
           </ModalBody>
-
-          {/* <ModalFooter>
-            <Button colorScheme='blue' mr={3}>
-              Save
-            </Button>
-            <Button onClick={onClose}>Cancel</Button>
-          </ModalFooter> */}
         </ModalContent>
       </ChakraModal>
     </>

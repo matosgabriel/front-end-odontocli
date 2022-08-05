@@ -38,9 +38,20 @@ export interface IPatient {
 }
 
 export interface ICity {
-  id: string;
+  idCidade: string;
   nomeCidade: string;
   uf: string;
+}
+
+export interface IPatientRequest {
+  cpf: string;
+  nomeCompleto: string;
+  telefone: string;
+  dtNascimento: string;
+  numeroEndereco: number;
+  logradouroEndereco: string;
+  cepEndereco: string;
+  cidade: string;
 }
 
 export default function Home() {
@@ -55,22 +66,21 @@ export default function Home() {
     console.log(patient);
     setSelectedPatient(patient);
 
-
     onOpenFormModal();
   }
 
+  async function loadPatients() {
+    const { data: patientsCount } = await api.get('/paciente/count');
+    const { data: patientsLoaded } = await api.get('/paciente/list');
+    const { data: loadedCities } = await api.get('/cidade/list');
+
+    setTotalPatientsCount(patientsCount);
+    setPatients(patientsLoaded);
+    setCities(loadedCities);
+  }
+
   useEffect(() => {
-    async function loadPacientes() {
-      const { data: patientsCount } = await api.get('/paciente/count');
-      const { data: patientsLoaded } = await api.get('/paciente/list');
-      const { data: loadedCities } = await api.get('/cidade/list');
-
-      setTotalPatientsCount(patientsCount);
-      setPatients(patientsLoaded);
-      setCities(loadedCities);
-    }
-
-    loadPacientes();
+    loadPatients();
   }, []);
 
   return (
@@ -80,7 +90,14 @@ export default function Home() {
       </Head>
 
       { (selectedPatient != undefined) && // Checking if selectPatient its not a empty object
-        <FormModal isOpen={formModalIsOpen} onOpen={onOpenFormModal} onClose={onCloseFormModal} patient={selectedPatient} cities={cities} />
+        <FormModal
+          isOpen={formModalIsOpen}
+          onOpen={onOpenFormModal}
+          onClose={onCloseFormModal}
+          patient={{ ...selectedPatient, cidade: selectedPatient.cidade.idCidade }}
+          cities={cities}
+          loadPatients={loadPatients}
+        />
       }
       
       <Flex width='100%' height='100vh' flexDir='column'>
@@ -190,7 +207,6 @@ export default function Home() {
               mt={{ base: '26px', xl: '38px', '2xl': '62px' }}
               spacing='30px'
               height='100%'
-              overflow='hidden'
               overflowY='scroll'
               sx={{ '&::-webkit-scrollbar': { display: 'none' } }}
               pb='40px'
