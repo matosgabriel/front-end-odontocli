@@ -30,7 +30,7 @@ interface FormModalProps {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
-  patient: IPatientRequest;
+  patient?: IPatientRequest;
   cities: ICity[];
   loadPatients: () => Promise<void>;
 }
@@ -55,16 +55,20 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
   const [confirmModalType, setConfirmModalType] = useState<'update' | 'delete'>('update');
 
   const formik = useFormik({
-    initialValues: patient,
+    initialValues: { ...patient },
     validationSchema: schema,
-    onSubmit: (values) => {
+    validateOnBlur: false,
+    validateOnChange: false,
+    onSubmit: (values, { validateForm }) => {
+      validateForm(values);
       handleChangeSubmit();
     },
   });
 
   useEffect(() => {
     // formik.setFieldValue('nomeCompleto', patient.nomeCompleto, true);
-    formik.setValues(patient, true);
+    
+    !!patient ? formik.setValues({ ...patient }, true) : formik.resetForm();
   }, [patient]); // eslint-disable-line
 
   const handleChangeSubmit = useCallback(() => {
@@ -81,7 +85,7 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
 
   return (
     <>
-      <ConfirmationModal
+      {/* <ConfirmationModal
         message={confirmModalMessage}
         name={patient.nomeCompleto}
         isOpen={confirmModalIsOpen}
@@ -91,7 +95,7 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
         onCloseFormModal={onClose}
         loadPatients={loadPatients}
         type={confirmModalType}
-      />
+      /> */}
 
       <ChakraModal
         initialFocusRef={initialRef}

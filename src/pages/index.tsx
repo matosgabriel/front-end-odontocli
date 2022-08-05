@@ -69,6 +69,11 @@ export default function Home() {
     onOpenFormModal();
   }
 
+  function handleClickCreatePatient() {
+    setSelectedPatient(undefined);
+    onOpenFormModal();
+  }
+
   async function loadPatients() {
     const { data: patientsCount } = await api.get('/paciente/count');
     const { data: patientsLoaded } = await api.get('/paciente/list');
@@ -89,12 +94,19 @@ export default function Home() {
         <title>Odontocli | Home</title>
       </Head>
 
-      { (selectedPatient != undefined) && // Checking if selectPatient its not a empty object
+      { (!!selectedPatient) ? // Checking if selectPatient its not undefined
         <FormModal
           isOpen={formModalIsOpen}
           onOpen={onOpenFormModal}
           onClose={onCloseFormModal}
+          cities={cities}
           patient={{ ...selectedPatient, cidade: selectedPatient.cidade.idCidade }}
+          loadPatients={loadPatients}
+        />
+        : <FormModal
+          isOpen={formModalIsOpen}
+          onOpen={onOpenFormModal}
+          onClose={onCloseFormModal}
           cities={cities}
           loadPatients={loadPatients}
         />
@@ -196,7 +208,7 @@ export default function Home() {
                 color='white'
                 fontSize={{ base: '10px', xl: '12px', '2xl': '14px' }}
                 height={{ base: '30px', xl: '34px', '2xl': '38px' }}
-                onClick={onOpenFormModal}
+                onClick={handleClickCreatePatient}
               >
                 Adicionar paciente
               </Button>
