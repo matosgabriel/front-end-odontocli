@@ -39,7 +39,7 @@ function ConfirmationModal({ message, name, isOpen, onOpen, onClose, patientRequ
     onClose();
     onCloseFormModal();
     loadPatients();
-  }, []);
+  }, []); // eslint-disable-line
 
   const handleConfirmCreate = useCallback(async (values: IPatientRequest) => {
     setConfirmLoading(true);
@@ -49,7 +49,7 @@ function ConfirmationModal({ message, name, isOpen, onOpen, onClose, patientRequ
     onClose();
     onCloseFormModal();
     loadPatients();
-  }, [patientRequestData]);
+  }, [patientRequestData]); // eslint-disable-line
 
   const handleConfirmDelete = useCallback(async () => {
     setConfirmLoading(true);
@@ -59,7 +59,7 @@ function ConfirmationModal({ message, name, isOpen, onOpen, onClose, patientRequ
     onClose();
     onCloseFormModal();
     loadPatients();
-  }, [patientRequestData]);
+  }, [patientRequestData]); // eslint-disable-line
 
   return (
     <>
@@ -88,7 +88,7 @@ function ConfirmationModal({ message, name, isOpen, onOpen, onClose, patientRequ
                 Cancelar
               </Button>
               <Button
-                colorScheme='green'
+                colorScheme='customGreen'
                 fontWeight='500'
                 ml={3}
                 onClick={

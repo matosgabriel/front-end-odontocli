@@ -22,9 +22,10 @@ import {
   Select,
 } from '@chakra-ui/react';
 
-import { ConfirmationModal } from './ConfirmationModal';
-
 import * as yup from 'yup';
+
+import { ConfirmationModal } from './ConfirmationModal';
+import { FormInput } from './FormInput';
 
 interface FormModalProps {
   isOpen: boolean;
@@ -50,7 +51,6 @@ const schema = yup.object().shape({
 });
 
 function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: FormModalProps) {
-  const initialRef = React.useRef(null);
   const { isOpen: confirmModalIsOpen, onOpen: onOpenConfirmModal, onClose: onCloseConfirmModal } = useDisclosure(); // Controls the ConfirmModal
   const [confirmModalMessage, setConfirmModalMessage] = useState('');
   const [confirmModalType, setConfirmModalType] = useState<'update' | 'delete' | 'create'>('update');
@@ -107,7 +107,6 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
       }
 
       <ChakraModal
-        initialFocusRef={initialRef}
         // finalFocusRef={finalRef}
         isCentered
         isOpen={isOpen}
@@ -122,53 +121,47 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
           <ModalBody pb={6}>
             <form onSubmit={formik.handleSubmit}>
               <Box display='grid' gridTemplateColumns={{ base: '1fr 1fr', xl: '1fr 1fr 1fr' }} gap='20px'>
-                <FormControl isInvalid={!!formik.errors.nomeCompleto}>
-                  <FormLabel>Nome completo</FormLabel>
-                  <Input
-                    id='nomeCompleto'
-                    ref={initialRef}
-                    placeholder='Fulano da Silva'
-                    value={formik.values.nomeCompleto}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                  <FormErrorMessage>{ formik.errors.nomeCompleto }</FormErrorMessage>
-                </FormControl>
+                <FormInput
+                  isInvalid={!!formik.errors.nomeCompleto}
+                  id='nomeCompleto'
+                  initialFocus
+                  label='Nome completo'
+                  errorMessage={formik.errors.nomeCompleto}
+                  placeholder='Fulano da Silva'
+                  value={formik.values.nomeCompleto}
+                  onChange={formik.handleChange}
+                />
 
-                <FormControl isInvalid={!!formik.errors.dtNascimento}>
-                  <FormLabel>Data de nascimento</FormLabel>
-                  <Input
-                    as={InputMask}
-                    mask='99/99/9999'
-                    id='dtNascimento'
-                    placeholder='00/00/0000'
-                    value={formik.values.dtNascimento}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                  <FormErrorMessage>{ formik.errors.dtNascimento }</FormErrorMessage>
-                </FormControl>
+                <FormInput
+                  isInvalid={!!formik.errors.dtNascimento}
+                  id='dtNascimento'
+                  label='Data de nascimento'
+                  errorMessage={formik.errors.nomeCompleto}
+                  placeholder='00/00/0000'
+                  value={formik.values.dtNascimento}
+                  onChange={formik.handleChange}
+                  as={InputMask}
+                  mask='99/99/9999'
+                />
 
-                <FormControl isInvalid={!!formik.errors.cpf}>
-                  <FormLabel>CPF</FormLabel>
-                  <Input
-                    as={InputMask}
-                    mask='999.999.999-99'
-                    isDisabled={!!patient}
-                    id='cpf'
-                    placeholder='000.000.000-00'
-                    value={formik.values.cpf}
-                    onBlur={formik.handleBlur}
-                    onChange={(e) => {
-                      const oldTargetValue = e.target.value
-                      e.target.value = oldTargetValue.replace(/[^0-9]/g, '');
+                <FormInput
+                  id='cpf'
+                  as={InputMask}
+                  mask='999.999.999-99'
+                  isInvalid={!!formik.errors.cpf}
+                  isDisabled={!!patient}
+                  label='CPF'
+                  errorMessage={formik.errors.cpf}
+                  placeholder='000.000.000-00'
+                  value={formik.values.cpf}
+                  onChange={(e) => {
+                    const oldTargetValue = e.target.value
+                    e.target.value = oldTargetValue.replace(/[^0-9]/g, '');
 
-                      formik.handleChange(e);
-                      e.target.value = oldTargetValue;
-                    }}
-                  />
-                  <FormErrorMessage>{ formik.errors.cpf }</FormErrorMessage>
-                </FormControl>
+                    formik.handleChange(e);
+                    e.target.value = oldTargetValue;
+                  }}
+                />
 
                 <FormControl isInvalid={!!formik.errors.cidade}>
                   <FormLabel>Cidade</FormLabel>
@@ -188,75 +181,67 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
                   <FormErrorMessage>{ formik.errors.cidade }</FormErrorMessage>
                 </FormControl>
 
-                <FormControl isInvalid={!!formik.errors.cepEndereco}>
-                  <FormLabel>CEP</FormLabel>
-                  <Input
-                    as={InputMask}
-                    mask='99999-999'
-                    id='cepEndereco'
-                    placeholder='00000-000'
-                    value={formik.values.cepEndereco}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                  <FormErrorMessage>{ formik.errors.cepEndereco }</FormErrorMessage>
-                </FormControl>
+                <FormInput
+                  isInvalid={!!formik.errors.cepEndereco}
+                  id='cepEndereco'
+                  label='CEP'
+                  errorMessage={formik.errors.cepEndereco}
+                  placeholder='00000-000'
+                  value={formik.values.cepEndereco}
+                  onChange={formik.handleChange}
+                  as={InputMask}
+                  mask='99999-999'
+                />
 
-                <FormControl isInvalid={!!formik.errors.logradouroEndereco}>
-                  <FormLabel>Logradouro</FormLabel>
-                  <Input
-                    id='logradouroEndereco'
-                    placeholder='Avenida'
-                    value={formik.values.logradouroEndereco}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                  <FormErrorMessage>{ formik.errors.logradouroEndereco }</FormErrorMessage>
-                </FormControl>
+                <FormInput
+                  isInvalid={!!formik.errors.logradouroEndereco}
+                  id='logradouroEndereco'
+                  label='Logradouro'
+                  errorMessage={formik.errors.logradouroEndereco}
+                  placeholder='Avenida'
+                  value={formik.values.logradouroEndereco}
+                  onChange={formik.handleChange}
+                />
 
-                <FormControl isInvalid={!!formik.errors.numeroEndereco}>
-                  <FormLabel>Número</FormLabel>
-                  <Input
-                    id='numeroEndereco'
-                    type='number'
-                    placeholder='0'
-                    value={formik.values.numeroEndereco}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                  <FormErrorMessage>{ formik.errors.numeroEndereco }</FormErrorMessage>
-                </FormControl>
+                <FormInput
+                  isInvalid={!!formik.errors.numeroEndereco}
+                  id='numeroEndereco'
+                  label='Número'
+                  errorMessage={formik.errors.numeroEndereco}
+                  placeholder='0'
+                  value={formik.values.numeroEndereco}
+                  onChange={formik.handleChange}
+                />
 
-                <FormControl isInvalid={!!formik.errors.telefone }>
-                  <FormLabel>Telefone</FormLabel>
-                  <Input
-                    as={InputMask}
-                    mask='(999) 99999-9999'
-                    id='telefone'
-                    placeholder='(000) 00000-0000'
-                    value={formik.values.telefone}
-                    onBlur={formik.handleBlur}
-                    onChange={(e) => {
-                      const oldTargetValue = e.target.value;
-                      e.target.value = oldTargetValue.replace(/[^0-9]/g, '');
+                <FormInput
+                  isInvalid={!!formik.errors.telefone}
+                  id='telefone'
+                  label='Telefone'
+                  errorMessage={formik.errors.telefone}
+                  placeholder='(000) 00000-0000'
+                  value={formik.values.telefone}
+                  as={InputMask}
+                  mask='(999) 99999-9999'
+                  onChange={(e) => {
+                    const oldTargetValue = e.target.value;
+                    e.target.value = oldTargetValue.replace(/[^0-9]/g, '');
 
-                      formik.handleChange(e);
-                      e.target.value = oldTargetValue;
-                    }}
-                  />
-                  <FormErrorMessage> {formik.errors.telefone} </FormErrorMessage>
-                </FormControl>
+                    formik.handleChange(e);
+                    e.target.value = oldTargetValue;
+                  }}
+                />
               </Box>
 
               <Flex mt='50px' align='center' justify='center'>
                 { patient ? <>
-                  <Button fontWeight='500' colorScheme='customYellow' textColor='white' type='submit' onClick={() => {setValidateOnChange(true)}}>
-                    Alterar
-                  </Button>
-                
-                  <Button fontWeight='500' colorScheme='customRed' ml={3} onClick={handleDeleteSubmit}>
-                    Deletar
-                  </Button> </>
+                    <Button fontWeight='500' colorScheme='customYellow' textColor='white' type='submit' onClick={() => {setValidateOnChange(true)}}>
+                      Alterar
+                    </Button>
+                  
+                    <Button fontWeight='500' colorScheme='customRed' ml={3} onClick={handleDeleteSubmit}>
+                      Deletar
+                    </Button>
+                  </>
                   : <Button colorScheme='customGreen' fontWeight='500' type='submit' onClick={() => {setValidateOnChange(true)}}>Cadastrar</Button>
                 }
               </Flex>
