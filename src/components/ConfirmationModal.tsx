@@ -17,14 +17,14 @@ import { api } from '../utils/api';
 
 interface ConfirmationModalModalProps {
   message: string;
-  name: string;
+  name: string | undefined;
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
   patientRequestData: IPatientRequest;
   onCloseFormModal: () => void;
   loadPatients: () => Promise<void>;
-  type: 'update' | 'delete';
+  type: 'update' | 'delete' | 'create';
 }
 
 function ConfirmationModal({ message, name, isOpen, onOpen, onClose, patientRequestData, onCloseFormModal, type, loadPatients }: ConfirmationModalModalProps) {
@@ -40,6 +40,16 @@ function ConfirmationModal({ message, name, isOpen, onOpen, onClose, patientRequ
     onCloseFormModal();
     loadPatients();
   }, []);
+
+  const handleConfirmCreate = useCallback(async (values: IPatientRequest) => {
+    setConfirmLoading(true);
+    await api.post('/paciente/create', values);
+    setConfirmLoading(false);
+
+    onClose();
+    onCloseFormModal();
+    loadPatients();
+  }, [patientRequestData]);
 
   const handleConfirmDelete = useCallback(async () => {
     setConfirmLoading(true);
@@ -81,7 +91,21 @@ function ConfirmationModal({ message, name, isOpen, onOpen, onClose, patientRequ
                 colorScheme='green'
                 fontWeight='500'
                 ml={3}
-                onClick={type === 'update' ? () => handleConfirmUpdate(patientRequestData) : handleConfirmDelete }
+                onClick={
+                  () => {
+                    switch(type) {
+                      case 'update':
+                        handleConfirmUpdate(patientRequestData);
+                        break;
+                      case 'delete':
+                        handleConfirmDelete();
+                        break;
+                      case 'create':
+                        handleConfirmCreate(patientRequestData);
+                        break;
+                    } 
+                  }
+                }
                 isLoading={confirmLoading}
               >
                 Confirmar

@@ -53,16 +53,17 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
   const initialRef = React.useRef(null);
   const { isOpen: confirmModalIsOpen, onOpen: onOpenConfirmModal, onClose: onCloseConfirmModal } = useDisclosure(); // Controls the ConfirmModal
   const [confirmModalMessage, setConfirmModalMessage] = useState('');
-  const [confirmModalType, setConfirmModalType] = useState<'update' | 'delete'>('update');
+  const [confirmModalType, setConfirmModalType] = useState<'update' | 'delete' | 'create'>('update');
+  const [validateOnChange, setValidateOnChange] = useState(false);
 
   const formik = useFormik({
     initialValues: { ...patient },
     validationSchema: schema,
-    validateOnBlur: true,
-    validateOnChange: false,
+    validateOnBlur: false,
+    validateOnChange: !!patient || validateOnChange,
     onSubmit: (values, { validateForm }) => {
       validateForm(values);
-      handleChangeSubmit();
+      !!patient ? handleChangeSubmit() : handleCreateSubmit();
     },
   });
 
@@ -77,6 +78,12 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
     onOpenConfirmModal();
   }, [onOpenConfirmModal]);
 
+  const handleCreateSubmit = useCallback(() => {
+    setConfirmModalMessage('Incluir os dados de');
+    setConfirmModalType('create');
+    onOpenConfirmModal();
+  }, [onOpenConfirmModal]);
+
   const handleDeleteSubmit = useCallback(() => {
     setConfirmModalMessage('Deletar os dados de');
     setConfirmModalType('delete');
@@ -85,17 +92,19 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
 
   return (
     <>
-      {/* <ConfirmationModal
-        message={confirmModalMessage}
-        name={patient.nomeCompleto}
-        isOpen={confirmModalIsOpen}
-        onOpen={onOpenConfirmModal}
-        onClose={onCloseConfirmModal}
-        patientRequestData={formik.values}
-        onCloseFormModal={onClose}
-        loadPatients={loadPatients}
-        type={confirmModalType}
-      /> */}
+      { 
+        <ConfirmationModal
+          message={confirmModalMessage}
+          name={!!patient ? patient.nomeCompleto : formik.values.nomeCompleto}
+          isOpen={confirmModalIsOpen}
+          onOpen={onOpenConfirmModal}
+          onClose={onCloseConfirmModal}
+          patientRequestData={formik.values}
+          onCloseFormModal={onClose}
+          loadPatients={loadPatients}
+          type={confirmModalType}
+        />
+      }
 
       <ChakraModal
         initialFocusRef={initialRef}
@@ -241,14 +250,14 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
 
               <Flex mt='50px' align='center' justify='center'>
                 { patient ? <>
-                  <Button fontWeight='500' colorScheme='customYellow' textColor='white' type='submit'>
+                  <Button fontWeight='500' colorScheme='customYellow' textColor='white' type='submit' onClick={() => {setValidateOnChange(true)}}>
                     Alterar
                   </Button>
                 
                   <Button fontWeight='500' colorScheme='customRed' ml={3} onClick={handleDeleteSubmit}>
                     Deletar
                   </Button> </>
-                  : <Button colorScheme='customGreen' fontWeight='500' type='submit'>Cadastrar</Button>
+                  : <Button colorScheme='customGreen' fontWeight='500' type='submit' onClick={() => {setValidateOnChange(true)}}>Cadastrar</Button>
                 }
               </Flex>
             </form>

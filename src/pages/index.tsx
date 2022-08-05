@@ -44,14 +44,14 @@ export interface ICity {
 }
 
 export interface IPatientRequest {
-  cpf: string;
-  nomeCompleto: string;
-  telefone: string;
-  dtNascimento: string;
-  numeroEndereco: number;
-  logradouroEndereco: string;
-  cepEndereco: string;
-  cidade: string;
+  cpf?: string | undefined;
+  nomeCompleto?: string | undefined;
+  telefone?: string | undefined;
+  dtNascimento?: string | undefined;
+  numeroEndereco?: number | undefined;
+  logradouroEndereco?: string | undefined;
+  cepEndereco?: string | undefined;
+  cidade?: string | undefined;
 }
 
 export default function Home() {
