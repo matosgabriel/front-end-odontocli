@@ -6,6 +6,8 @@ import { PatientItem } from '../components/PatientItem';
 
 import { FormModal } from '../components/FormModal';
 import { api } from '../utils/api';
+import { AsideDrawer } from '../components/AsideDrawer';
+import { FiMenu } from 'react-icons/fi';
 
 export interface IPatient {
   cpf: string;
@@ -41,6 +43,7 @@ export interface IPatientRequest {
 
 export default function Home() {
   const { isOpen: formModalIsOpen, onOpen: onOpenFormModal, onClose: onCloseFormModal } = useDisclosure(); // Controls InfoModal
+  const { isOpen: asideDrawerIsOpen, onOpen: onOpenAsideDrawer, onClose: onCloseAsideDrawer } = useDisclosure(); // Controls InfoModal
   const [totalPatientsCount, setTotalPatientsCount] = useState(0);
   const [patients, setPatients] = useState([] as IPatient[]);
   const [cities, setCities] = useState([] as ICity[]);
@@ -109,12 +112,18 @@ export default function Home() {
         >
           <Flex
             maxW='1650px'
+            justify={ (breakpoint == 'sm' || breakpoint == 'base') ? 'space-between' : 'flex-start' }
+            align='center'
             w='100%'
             h='94px'
             m='0 auto'
-            align='center'
             p='0 20px'
           >
+            { (breakpoint == 'sm' || breakpoint == 'base') &&
+              <Button onClick={onOpenAsideDrawer} bg='transparent'>
+                <FiMenu size='25' />
+              </Button>
+            }
             <Image src='/logo.svg' alt='Logo' draggable='false' />
           </Flex>
         </Flex>
@@ -127,42 +136,44 @@ export default function Home() {
           padding={{ '2xl': '45px 123px 0', xl: '30px 70px 0', lg: '20px 50px 0', base: '15px 30px 0' }}
           align='flex-start'
         >
-          { (breakpoint != 'sm') && <VStack as='aside' w='242px' h='100%' spacing={{base: '20px', xl: '25px', '2xl': '35px'}} borderRightWidth='1px'> {/* Aside */}
-            <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Section */}
-              <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>INÍCIO</Text>
-              
-              <VStack spacing={{ xl: '10px', '2xl': '20px' }} w='100%'>
-                <PageButton title='Pacientes' isActive />
+          { (breakpoint != 'sm' && breakpoint != 'base') ? 
+            <VStack as='aside' w='242px' h='100%' spacing={{base: '20px', xl: '25px', '2xl': '35px'}} borderRightWidth='1px'> {/* Aside */}
+              <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Section */}
+                <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>INÍCIO</Text>
+                
+                <VStack spacing={{ xl: '10px', '2xl': '20px' }} w='100%'>
+                  <PageButton title='Pacientes' isActive />
+                </VStack>
               </VStack>
-            </VStack>
 
-            <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Section */}
-              <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>ATENDIMENTO</Text>
-              
-              <VStack spacing={{ base: '8px', xl: '10px', '2xl': '12px' }} w='100%'>
-                <PageButton title='Consultas' />
-                <PageButton title='Tratamentos' />
+              <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Section */}
+                <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>ATENDIMENTO</Text>
+                
+                <VStack spacing={{ base: '8px', xl: '10px', '2xl': '12px' }} w='100%'>
+                  <PageButton title='Consultas' />
+                  <PageButton title='Tratamentos' />
+                </VStack>
               </VStack>
-            </VStack>
-            
-            <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Section */}
-              <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>FINANCEIRO</Text>
               
-              <VStack spacing={{ xl: '10px', '2xl': '12px' }} w='100%'>
-                <PageButton title='Débitos recebidos' />
-                <PageButton title='Dívidas' />
-                <PageButton title='Balanço' />
+              <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Section */}
+                <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>FINANCEIRO</Text>
+                
+                <VStack spacing={{ xl: '10px', '2xl': '12px' }} w='100%'>
+                  <PageButton title='Débitos recebidos' />
+                  <PageButton title='Dívidas' />
+                  <PageButton title='Balanço' />
+                </VStack>
               </VStack>
-            </VStack>
 
-            <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Section */}
-              <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>ASPECTOS LEGAIS</Text>
-              
-              <VStack spacing={{ xl: '10px', '2xl': '12px' }} w='100%'>
-                <PageButton title='Termos de uso' />
+              <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Section */}
+                <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>ASPECTOS LEGAIS</Text>
+                
+                <VStack spacing={{ xl: '10px', '2xl': '12px' }} w='100%'>
+                  <PageButton title='Termos de uso' />
+                </VStack>
               </VStack>
-            </VStack>
-          </VStack> }
+            </VStack> 
+          : <AsideDrawer isOpen={asideDrawerIsOpen} onClose={onCloseAsideDrawer} />}
 
           <Flex w='100%' h='100%' pl={{ sm: '0px', md: '40px', xl: '60px', '2xl': '97px' }} flexDir='column'> {/* Content */}
             <Flex // Content header
@@ -171,7 +182,7 @@ export default function Home() {
               justify='space-between'
               w='100%'
               h='42px'
-            > 
+            >
               <Flex display='flex' align='baseline'>
                 <Text
                   fontSize={{ base: '16px', xl: '18px', '2xl': '22px' }}
