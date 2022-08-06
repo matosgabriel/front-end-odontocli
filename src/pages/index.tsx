@@ -1,4 +1,4 @@
-import { Button, Flex, Image, Text, useBreakpoint, useDisclosure, VStack } from '@chakra-ui/react';
+import { Button, Flex, Image, Text, useBreakpoint, useDisclosure, VStack, InputLeftElement, InputGroup, Input, Icon } from '@chakra-ui/react';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { PageButton } from '../components/PageButton';
@@ -7,7 +7,7 @@ import { PatientItem } from '../components/PatientItem';
 import { FormModal } from '../components/FormModal';
 import { api } from '../utils/api';
 import { AsideDrawer } from '../components/AsideDrawer';
-import { FiMenu } from 'react-icons/fi';
+import { FiMenu, FiSearch } from 'react-icons/fi';
 
 export interface IPatient {
   cpf: string;
@@ -44,12 +44,19 @@ export interface IPatientRequest {
 export default function Home() {
   const { isOpen: formModalIsOpen, onOpen: onOpenFormModal, onClose: onCloseFormModal } = useDisclosure(); // Controls InfoModal
   const { isOpen: asideDrawerIsOpen, onOpen: onOpenAsideDrawer, onClose: onCloseAsideDrawer } = useDisclosure(); // Controls InfoModal
+
   const [totalPatientsCount, setTotalPatientsCount] = useState(0);
   const [patients, setPatients] = useState([] as IPatient[]);
   const [cities, setCities] = useState([] as ICity[]);
   const [selectedPatient, setSelectedPatient] = useState<IPatient | undefined>(undefined);
 
+  const [search, setSearch] = useState('');
+
   const breakpoint = useBreakpoint();
+
+  const filteredPatients = search.length
+    ? patients.filter(patient => patient.nomeCompleto.includes(search))
+    : [];
 
   function handleClickVisualize(patient: IPatient) {
     onCloseFormModal();
@@ -177,40 +184,60 @@ export default function Home() {
 
           <Flex w='100%' h='100%' pl={{ sm: '0px', md: '40px', xl: '60px', '2xl': '97px' }} flexDir='column'> {/* Content */}
             <Flex // Content header
-              flexDir='row'
+              flexDir={{ base: 'column', md: 'row' }}
               align='center'
               justify='space-between'
               w='100%'
-              h='42px'
+              // h='42px'
             >
-              <Flex display='flex' align='baseline'>
-                <Text
-                  fontSize={{ base: '16px', xl: '18px', '2xl': '22px' }}
-                  lineHeight={{ base: '20px', xl: '24px', '2xl': '33px' }}
-                  fontWeight='600'
+              <Flex width='100%' justify='space-between'>
+                <Flex display='flex' align='baseline'>
+                  <Text
+                    fontSize={{ base: '16px', xl: '18px', '2xl': '22px' }}
+                    lineHeight={{ base: '20px', xl: '24px', '2xl': '33px' }}
+                    fontWeight='600'
+                  >
+                    Pacientes
+                  </Text>
+                  <Text
+                    as='p'
+                    color='#A1A5B7'
+                    fontSize={{ base: '12px', xl: '13px', '2xl': '16px' }}
+                    fontWeight='600'
+                    ml='4px'
+                  >
+                    ({ totalPatientsCount })
+                  </Text>
+                </Flex>
+
+                { (breakpoint != 'base' && breakpoint != 'sm') &&
+                  <InputGroup width='250px'>
+                    <InputLeftElement>
+                      <FiSearch color='gray' />
+                    </InputLeftElement>
+                    <Input value={search} onChange={e => setSearch(e.target.value)} placeholder='Procurar'/>
+                  </InputGroup>
+                }
+
+                <Button
+                  colorScheme='customBlue'
+                  color='white'
+                  fontSize={{ base: '10px', xl: '12px', '2xl': '14px' }}
+                  height={{ base: '30px', xl: '34px', '2xl': '38px' }}
+                  onClick={handleClickCreatePatient}
                 >
-                  Pacientes
-                </Text>
-                <Text
-                  as='p'
-                  color='#A1A5B7'
-                  fontSize={{ base: '12px', xl: '13px', '2xl': '16px' }}
-                  fontWeight='600'
-                  ml='4px'
-                >
-                  ({ totalPatientsCount })
-                </Text>
+                  Adicionar paciente
+                </Button>
               </Flex>
 
-              <Button
-                colorScheme='customBlue'
-                color='white'
-                fontSize={{ base: '10px', xl: '12px', '2xl': '14px' }}
-                height={{ base: '30px', xl: '34px', '2xl': '38px' }}
-                onClick={handleClickCreatePatient}
-              >
-                Adicionar paciente
-              </Button>
+              { (breakpoint == 'base' || breakpoint == 'sm') &&
+                <InputGroup width='250px' alignItems='center' justifyContent='center' mt='20px' >
+                  <InputLeftElement height='30px'>
+                    <FiSearch size='12' />
+                  </InputLeftElement>
+                  <Input height='30px' fontSize='12px' value={search} onChange={e => setSearch(e.target.value)} placeholder='Procurar'/>
+                </InputGroup>
+              }
             </Flex>
 
             <VStack // Content main
@@ -222,16 +249,28 @@ export default function Home() {
               sx={{ '&::-webkit-scrollbar': { display: 'none' } }}
               pb='40px'
             >
-              { patients.map(patient => {
-                return (
-                  <PatientItem
-                    key={patient.cpf}
-                    name={patient.nomeCompleto}
-                    phone={patient.telefone}
-                    onClick={() => handleClickVisualize(patient)}
-                  />
-                );
-              }) }
+              { search.length
+                ? filteredPatients.map(patient => {
+                  return (
+                    <PatientItem
+                      key={patient.cpf}
+                      name={patient.nomeCompleto}
+                      phone={patient.telefone}
+                      onClick={() => handleClickVisualize(patient)}
+                    />
+                  );
+                })
+                : patients.map(patient => {
+                  return (
+                    <PatientItem
+                      key={patient.cpf}
+                      name={patient.nomeCompleto}
+                      phone={patient.telefone}
+                      onClick={() => handleClickVisualize(patient)}
+                    />
+                  );
+                })
+              }
             </VStack>
           </Flex>
         </Flex>
