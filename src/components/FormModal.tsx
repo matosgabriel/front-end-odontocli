@@ -103,6 +103,7 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
           onCloseFormModal={onClose}
           loadPatients={loadPatients}
           type={confirmModalType}
+          resetForm={formik.resetForm}
         />
       }
 
@@ -114,13 +115,13 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
         size='5xl'
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent p={{ base: '0 0px', xl: '0 5px', '2xl': '0 10px' }}>
           <ModalHeader>Dados do paciente</ModalHeader>
           <ModalCloseButton />
 
           <ModalBody pb={6}>
             <form onSubmit={formik.handleSubmit}>
-              <Box display='grid' gridTemplateColumns={{ base: '1fr 1fr', xl: '1fr 1fr 1fr' }} gap='20px'>
+              <Box display='grid' gridTemplateColumns={{ base: '1fr 1fr', md: '1fr 1fr 1fr' }} gap='20px'>
                 <FormInput
                   isInvalid={!!formik.errors.nomeCompleto}
                   id='nomeCompleto'
@@ -164,13 +165,15 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
                 />
 
                 <FormControl isInvalid={!!formik.errors.cidade}>
-                  <FormLabel>Cidade</FormLabel>
+                  <FormLabel fontSize={{ base: '12px', xl: '14px', '2xl': '16px' }}>Cidade</FormLabel>
                   <Select
                     id='cidade'
                     placeholder='Selecione a cidade'
                     value={formik.values.cidade}
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
+                    height={{ base: '30px', xl: '34px', '2xl': '40px' }}
+                    fontSize={{ base: '12px', xl: '14px', '2xl': '16px' }}
                   >
                     { cities.map(city => {
                       return (
@@ -232,17 +235,41 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
                 />
               </Box>
 
-              <Flex mt='50px' align='center' justify='center'>
+              <Flex mt={{ base: '25px', xl: '35px', '2xl': '50px' }} align='center' justify='center'>
                 { patient ? <>
-                    <Button fontWeight='500' colorScheme='customYellow' textColor='white' type='submit' onClick={() => {setValidateOnChange(true)}}>
+                    <Button
+                      fontWeight='500'
+                      colorScheme='customYellow'
+                      textColor='white'
+                      type='submit'
+                      height={{ base: '30px', xl: '34px', '2xl': '40px' }}
+                      fontSize={{ base: '12px', xl: '14px', '2xl': '16px' }}
+                      onClick={() => {setValidateOnChange(true)}}
+                    >
                       Alterar
                     </Button>
                   
-                    <Button fontWeight='500' colorScheme='customRed' ml={3} onClick={handleDeleteSubmit}>
+                    <Button
+                      fontWeight='500'
+                      colorScheme='customRed'
+                      ml={3}
+                      height={{ base: '30px', xl: '34px', '2xl': '40px' }}
+                      fontSize={{ base: '12px', xl: '14px', '2xl': '16px' }}
+                      onClick={handleDeleteSubmit}
+                    >
                       Deletar
                     </Button>
-                  </>
-                  : <Button colorScheme='customGreen' fontWeight='500' type='submit' onClick={() => {setValidateOnChange(true)}}>Cadastrar</Button>
+                  </> :
+                  <Button
+                    colorScheme='customGreen'
+                    fontWeight='500'
+                    type='submit'
+                    height={{ base: '30px', xl: '34px', '2xl': '40px' }}
+                    fontSize={{ base: '12px', xl: '14px', '2xl': '16px' }}
+                    onClick={() => {setValidateOnChange(true)}}
+                  >
+                    Cadastrar
+                  </Button>
                 }
               </Flex>
             </form>

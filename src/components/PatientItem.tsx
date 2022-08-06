@@ -23,14 +23,14 @@ function PatientItem({ name, phone, onClick }: PatientItemProps) {
         <Flex direction='column' ml='12px' fontWeight='500'>
           <Text
             color='#181C32'
-            lineHeight='20px'
+            lineHeight={{ base: '16px', xl: '18px', '2xl': '20px' }}
             fontSize={{ base: '12px', xl: '14px', '2xl': '16px' }}
           >
             {name}
           </Text>
           <Text
             color='#A1A5B7'
-            lineHeight='16px'
+            lineHeight={{ base: '12px', xl: '14px', '2xl': '16px' }}
             fontSize={{ base: '10px', xl: '12xp', '2xl': '14px' }}
             mt={{ base: '1px', xl: '3px', '2xl': '5px' }}
           >

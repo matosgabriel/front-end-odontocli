@@ -1,4 +1,4 @@
-import { Button, Flex, Image, Text, useDisclosure, VStack } from '@chakra-ui/react';
+import { Button, Flex, Image, Text, useBreakpoint, useDisclosure, VStack } from '@chakra-ui/react';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { PageButton } from '../components/PageButton';
@@ -6,21 +6,6 @@ import { PatientItem } from '../components/PatientItem';
 
 import { FormModal } from '../components/FormModal';
 import { api } from '../utils/api';
-
-const defaultPatient = {
-  nomeCompleto: 'Fulano',
-  dtNascimento: '00/00/0000',
-  cpf: '111.111.111-11',
-  cidade: {
-    idCidade: '00000000-0000-0000-0000-00000000',
-    nomeCidade: 'Cidade',
-    uf: 'ES'
-  },
-  cepEndereco: '00000-000',
-  logradouroEndereco: 'Rua 1',
-  numeroEndereco: 1,
-  telefone: '(000) 00000-0000'
-}
 
 export interface IPatient {
   cpf: string;
@@ -61,6 +46,8 @@ export default function Home() {
   const [cities, setCities] = useState([] as ICity[]);
   const [selectedPatient, setSelectedPatient] = useState<IPatient | undefined>(undefined);
 
+  const breakpoint = useBreakpoint();
+
   function handleClickVisualize(patient: IPatient) {
     onCloseFormModal();
     console.log(patient);
@@ -86,7 +73,8 @@ export default function Home() {
 
   useEffect(() => {
     loadPatients();
-  }, []);
+    console.log(breakpoint);
+  }, [breakpoint]);
 
   return (
     <>
@@ -136,10 +124,10 @@ export default function Home() {
           flexDir='row'
           height='calc(100% - 94px)'
           w='100%'
-          padding={{ '2xl': '45px 123px 0', xl: '30px 70px 0', lg: '20px 50px 0', sm: '15px 30px 0' }}
+          padding={{ '2xl': '45px 123px 0', xl: '30px 70px 0', lg: '20px 50px 0', base: '15px 30px 0' }}
           align='flex-start'
         >
-          <VStack as='aside' w='242px' h='100%' spacing={{base: '20px', xl: '25px', '2xl': '35px'}} borderRightWidth='1px'> {/* Aside */}
+          { (breakpoint != 'sm') && <VStack as='aside' w='242px' h='100%' spacing={{base: '20px', xl: '25px', '2xl': '35px'}} borderRightWidth='1px'> {/* Aside */}
             <VStack as='section' w='100%' spacing='12px' justify='flex-start'> {/* Section */}
               <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>INÍCIO</Text>
               
@@ -174,9 +162,9 @@ export default function Home() {
                 <PageButton title='Termos de uso' />
               </VStack>
             </VStack>
-          </VStack>
+          </VStack> }
 
-          <Flex w='100%' h='100%' pl={{ base: '30px', md: '40px', xl: '60px', '2xl': '97px' }} flexDir='column'> {/* Content */}
+          <Flex w='100%' h='100%' pl={{ sm: '0px', md: '40px', xl: '60px', '2xl': '97px' }} flexDir='column'> {/* Content */}
             <Flex // Content header
               flexDir='row'
               align='center'
