@@ -10,6 +10,7 @@ O presente projeto utiliza os seguintes recursos:
 - ReactJS
 - Axios
 - Chakra UI
+- Formik
 
 # Iniciando
 
