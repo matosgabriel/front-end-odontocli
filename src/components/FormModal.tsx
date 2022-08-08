@@ -15,17 +15,16 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
-  Input,
   Box,
   Flex,
   useDisclosure,
   Select,
+  Radio
 } from '@chakra-ui/react';
-
-import * as yup from 'yup';
 
 import { ConfirmationModal } from './ConfirmationModal';
 import { FormInput } from './FormInput';
+import { validationSchema } from '../utils/validationSchema';
 
 interface FormModalProps {
   isOpen: boolean;
@@ -36,31 +35,19 @@ interface FormModalProps {
   loadPatients: () => Promise<void>;
 }
 
-const dateRegex = /^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/;
-const nameRegex = /^[A-ZÀ-Ÿ][A-zÀ-ÿ']+\s([A-zÀ-ÿ']\s?)*[A-ZÀ-Ÿ][A-zÀ-ÿ']+$/;
-
-const schema = yup.object().shape({
-  cpf: yup.string().required("O cpf é obrigatório!").max(11, "A quantidade de números é onze!").min(11, "A quantidade de números é onze!").matches(/^[0-9]+$/, "O cpf aceita apenas números!"),
-  nomeCompleto: yup.string().required("O nome do paciente é obrigatório!").matches(nameRegex, "Formato do nome inválido!"),
-  telefone: yup.string().required("O telefone é obrigatório!").matches(/^[0-9]+$/, "O telefone aceita apenas números!").max(12, "A quantidade de números do telefone é 12!").min(12, "A quantidade de números do telefone é 12!"),
-  dtNascimento: yup.string().required("A data de nascimento é obrigatória!").matches(dateRegex, "O formato deve ser dd/mm/yyyy!"),
-  numeroEndereco: yup.string().required("O número de endereço é obrigatório!").matches(/^[0-9]+$/, "O número de endereço aceita apenas números!"),
-  logradouroEndereco: yup.string().required("O logradouro é obrigatório!").matches(/^[aA-zZ]+$/, "O logradouro deve conter apenas letras!"),
-  cepEndereco: yup.string().required("O cep é obrigatório!").matches(/^([0-9]{5})\-([0-9]{3})$/, "O formato do cep deve ser nnnnn-nnn!"),
-  cidade: yup.string().required("A cidade é obrigatória!"),
-});
-
 function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: FormModalProps) {
   const { isOpen: confirmModalIsOpen, onOpen: onOpenConfirmModal, onClose: onCloseConfirmModal } = useDisclosure(); // Controls the ConfirmModal
   const [confirmModalMessage, setConfirmModalMessage] = useState('');
   const [confirmModalType, setConfirmModalType] = useState<'update' | 'delete' | 'create'>('update');
   const [validateOnChange, setValidateOnChange] = useState(false);
+  const [radio, setRadio] = useState(false);
 
   const formik = useFormik({
     initialValues: { ...patient },
-    validationSchema: schema,
+    validationSchema,
     validateOnBlur: false,
     validateOnChange: !!patient || validateOnChange,
+    initialErrors: {},
     onSubmit: (values, { validateForm }) => {
       validateForm(values);
       !!patient ? handleChangeSubmit() : handleCreateSubmit();
@@ -69,7 +56,12 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
 
   useEffect(() => {
     // formik.setFieldValue('nomeCompleto', patient.nomeCompleto, true);
-    !!patient ? formik.setValues({ ...patient }, true) : formik.resetForm();
+    if (!!patient) {
+      formik.setValues({ ...patient }, true)
+    } else {
+      formik.resetForm();
+    }
+
   }, [patient]); // eslint-disable-line
 
   const handleChangeSubmit = useCallback(() => {
@@ -137,7 +129,7 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
                   isInvalid={!!formik.errors.dtNascimento}
                   id='dtNascimento'
                   label='Data de nascimento'
-                  errorMessage={formik.errors.nomeCompleto}
+                  errorMessage={formik.errors.dtNascimento}
                   placeholder='00/00/0000'
                   value={formik.values.dtNascimento}
                   onChange={formik.handleChange}
@@ -210,6 +202,7 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
                   isInvalid={!!formik.errors.numeroEndereco}
                   id='numeroEndereco'
                   label='Número'
+                  type='number'
                   errorMessage={formik.errors.numeroEndereco}
                   placeholder='0'
                   value={formik.values.numeroEndereco}
@@ -244,7 +237,6 @@ function FormModal({isOpen, onOpen, onClose, patient, cities, loadPatients}: For
                       type='submit'
                       height={{ base: '30px', xl: '34px', '2xl': '40px' }}
                       fontSize={{ base: '12px', xl: '14px', '2xl': '16px' }}
-                      onClick={() => {setValidateOnChange(true)}}
                     >
                       Alterar
                     </Button>

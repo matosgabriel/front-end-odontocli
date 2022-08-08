@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Button, Flex, Image, Text, useBreakpoint, useDisclosure, VStack, InputLeftElement, InputGroup, Input, Icon } from '@chakra-ui/react';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
@@ -5,6 +6,8 @@ import { PageButton } from '../components/PageButton';
 import { PatientItem } from '../components/PatientItem';
 
 import { FormModal } from '../components/FormModal';
+import { UsageTermsModal } from '../components/UsageTermsModal';
+
 import { api } from '../utils/api';
 import { AsideDrawer } from '../components/AsideDrawer';
 import { FiMenu, FiSearch } from 'react-icons/fi';
@@ -43,6 +46,7 @@ export interface IPatientRequest {
 
 export default function Home() {
   const { isOpen: formModalIsOpen, onOpen: onOpenFormModal, onClose: onCloseFormModal } = useDisclosure(); // Controls InfoModal
+  const { isOpen: usageTermsModalIsOpen, onOpen: onOpenUsageTermsModal, onClose: onCloseUsageTermsModal } = useDisclosure(); // Controls UsageTermsModal
   const { isOpen: asideDrawerIsOpen, onOpen: onOpenAsideDrawer, onClose: onCloseAsideDrawer } = useDisclosure(); // Controls InfoModal
 
   const [totalPatientsCount, setTotalPatientsCount] = useState(0);
@@ -55,12 +59,11 @@ export default function Home() {
   const breakpoint = useBreakpoint();
 
   const filteredPatients = search.length
-    ? patients.filter(patient => patient.nomeCompleto.includes(search))
+    ? patients.filter(patient => patient.nomeCompleto.toLowerCase().includes(search.toLowerCase()))
     : [];
 
   function handleClickVisualize(patient: IPatient) {
     onCloseFormModal();
-    console.log(patient);
     setSelectedPatient(patient);
 
     onOpenFormModal();
@@ -83,8 +86,7 @@ export default function Home() {
 
   useEffect(() => {
     loadPatients();
-    console.log(breakpoint);
-  }, [breakpoint]);
+  }, []);
 
   return (
     <>
@@ -109,6 +111,14 @@ export default function Home() {
           loadPatients={loadPatients}
         />
       }
+
+      { 
+        <UsageTermsModal
+          isOpen={usageTermsModalIsOpen}
+          onOpen={onOpenUsageTermsModal}
+          onClose={onCloseUsageTermsModal}
+        />
+      }
       
       <Flex width='100%' height='100vh' flexDir='column'>
         <Flex
@@ -131,7 +141,9 @@ export default function Home() {
                 <FiMenu size='25' />
               </Button>
             }
-            <Image src='/logo.svg' alt='Logo' draggable='false' />
+            <Button onClick={() => setSearch('')} background='transparent' colorScheme='none'>
+              <Image src='/logo.svg' alt='Logo' draggable='false' />
+            </Button>
           </Flex>
         </Flex>
         
@@ -176,11 +188,11 @@ export default function Home() {
                 <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>ASPECTOS LEGAIS</Text>
                 
                 <VStack spacing={{ xl: '10px', '2xl': '12px' }} w='100%'>
-                  <PageButton title='Termos de uso' />
+                  <PageButton title='Termos de uso' onClick={onOpenUsageTermsModal} />
                 </VStack>
               </VStack>
             </VStack> 
-          : <AsideDrawer isOpen={asideDrawerIsOpen} onClose={onCloseAsideDrawer} />}
+          : <AsideDrawer isOpen={asideDrawerIsOpen} onClose={onCloseAsideDrawer} onOpenUsageTermsModal={onOpenUsageTermsModal} />}
 
           <Flex w='100%' h='100%' pl={{ sm: '0px', md: '40px', xl: '60px', '2xl': '97px' }} flexDir='column'> {/* Content */}
             <Flex // Content header
@@ -231,7 +243,7 @@ export default function Home() {
               </Flex>
 
               { (breakpoint == 'base' || breakpoint == 'sm') &&
-                <InputGroup width='250px' alignItems='center' justifyContent='center' mt='20px' >
+                <InputGroup width='100%' alignItems='center' justifyContent='center' mt='20px' >
                   <InputLeftElement height='30px'>
                     <FiSearch size='12' />
                   </InputLeftElement>

@@ -17,9 +17,10 @@ import { PageButton } from './PageButton';
 interface AsideDrawerProps {
   onClose: () => void;
   isOpen: boolean;
+  onOpenUsageTermsModal: () => void;
 }
 
-function AsideDrawer({ onClose, isOpen }: AsideDrawerProps) {
+function AsideDrawer({ onClose, isOpen, onOpenUsageTermsModal }: AsideDrawerProps) {
   // const { onClose, isOpen, onOpen } = useDisclosure();
 
   return (
@@ -68,7 +69,7 @@ function AsideDrawer({ onClose, isOpen }: AsideDrawerProps) {
                 <Text fontWeight='600' lineHeight='18px' fontSize='12px' w='100%' color='#A1A5B7'>ASPECTOS LEGAIS</Text>
                 
                 <VStack spacing={{ xl: '10px', '2xl': '12px' }} w='100%'>
-                  <PageButton title='Termos de uso' />
+                  <PageButton title='Termos de uso' onClick={onOpenUsageTermsModal}/>
                 </VStack>
               </VStack>
             </VStack> 
