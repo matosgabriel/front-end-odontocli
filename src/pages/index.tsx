@@ -128,13 +128,11 @@ export default function Home() {
           _before={{ content: `''`, height: '1px', bg:'#E4E6EF', width: '100%', position: 'absolute', left: 0, bottom: 0 }}
         >
           <Flex
-            maxW='1650px'
+            p={{ '2xl': '0 123px', xl: '0 70px', lg: '0 50px', base: '0 30px' }}
             justify={ (breakpoint == 'sm' || breakpoint == 'base') ? 'space-between' : 'flex-start' }
             align='center'
             w='100%'
             h='94px'
-            m='0 auto'
-            p='0 20px'
           >
             { (breakpoint == 'sm' || breakpoint == 'base') &&
               <Button onClick={onOpenAsideDrawer} bg='transparent'>
