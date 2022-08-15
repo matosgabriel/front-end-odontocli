@@ -2,7 +2,19 @@
 
 Esse repositório consiste no Front-end do projeto ODONTOCLI, desenvolvido como trabalho final da disciplina de Gerência de Projetos de Software.
 
-O presente projeto utiliza os seguintes recursos:
+<div align='center'><h2>Home</h2></div>
+<div align='center'>
+  <img src='./github_assets/web_home.png' alt='demo-web' height='350'>
+  <img src='./github_assets/mobile_home.png' alt='demo-web' height='350'>
+</div>
+
+<div align='center'><h2>Modal de paciente</h2></div>
+<div align='center'>
+  <img src='./github_assets/web_modal.png' alt='demo-web' height='350'>
+  <img src='./github_assets/mobile_modal.png' alt='demo-web' height='350'>
+</div>
+
+# Recursos utilizados
 
 - Javascript
 - Typescript
@@ -15,12 +27,10 @@ O presente projeto utiliza os seguintes recursos:
 
 # Iniciando
 
-Primeiramente, execute o projeto utilizando o seguinte comando:
+Primeiramente, execute a aplicação back-end do projeto seguindo os passos descritos no repositório https://github.com/andradearthurf/back-end-odontocli.git
 
-```bash
-npm run dev
-# or
-yarn dev
-```
-
+Para abrir a aplicação web em modo desenvolvedor execute o seguinte comando:
+  ```bash
+  yarn dev
+  ```
 Abra [http://localhost:3000](http://localhost:3000) no seu navegador para ver o resultado.
