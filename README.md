@@ -2,7 +2,7 @@
 
 Esse repositório consiste no Front-end do projeto ODONTOCLI, desenvolvido como trabalho final da disciplina de Gerência de Projetos de Software.
 
-<div align='center'><h2>Home</h2></div>
+## Home
 <div align='center'>
   <img src='./github_assets/web_home.png' alt='demo-web' height='350'>
   <img src='./github_assets/mobile_home.png' alt='demo-web' height='350'>
