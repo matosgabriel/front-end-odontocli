@@ -8,13 +8,13 @@ Esse repositório consiste no Front-end do projeto ODONTOCLI, desenvolvido como 
   <img src='./github_assets/mobile_home.png' alt='demo-web' height='350'>
 </div>
 
-<div align='center'><h2>Modal de paciente</h2></div>
+## Modal de paciente
 <div align='center'>
   <img src='./github_assets/web_modal.png' alt='demo-web' height='350'>
   <img src='./github_assets/mobile_modal.png' alt='demo-web' height='350'>
 </div>
 
-# Recursos utilizados
+## Recursos utilizados
 
 - Javascript
 - Typescript
@@ -25,7 +25,7 @@ Esse repositório consiste no Front-end do projeto ODONTOCLI, desenvolvido como 
 - Formik
 - Yup
 
-# Iniciando
+## Iniciando
 
 Primeiramente, execute a aplicação back-end do projeto seguindo os passos descritos no repositório https://github.com/andradearthurf/back-end-odontocli.git
 
